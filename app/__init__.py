@@ -1,9 +1,9 @@
 from flask import Flask
-from flask.ext.mongoengine import MongoEngine
+import pymongo
 
 app = Flask(__name__)
 app.config.from_object('config')
 
-db = MongoEngine(app)
+db = pymongo.MongoClient('localhost', 27017).test
 
 from app import views, models

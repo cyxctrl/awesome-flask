@@ -2,11 +2,12 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="shortcut icon" href={{ url_for('static', filename='favicon.ico') }} type="image/x-icon">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href={{ url_for('static',filename='bootstrap.css') }}>
-    <link rel="stylesheet" href={{ url_for('static',filename='jquery-1.12.0.js') }}>
-    <title>Todo</title>
+    <script src="{{ url_for('static',filename='jquery-1.12.0.js') }}"></script>
+    <script src="{{ url_for('static',filename='bootstrap.js') }}"></script>
+    <title></title>
 </head>
 <body>
     <div class="navbar navbar-inverse" role="navigation">
@@ -18,18 +19,33 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ url_for('index') }}">嘿嘿嘿嘿</a>
+                <a class="navbar-brand" href="#">点我会发亮</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url_for('index') }}">Home</a></li>
-                    <li><a href="{{ url_for('todo') }}">Todo</a></li>
+                    {% if username %}
+                    <li><a href="{{ url_for('todo',username=username) }}">Todo</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
     </div>
     <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+        {% endwith %}
         {% block content %}{% endblock %}
+        <p class="text-center">Powered by <a href="#">Python Webapp</a>. Copyright &copy; 2016.</p>
+        <p class="text-center">All rights reserved.</p>
     </div>
 </body>
 </html>

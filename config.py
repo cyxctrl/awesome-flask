@@ -1,3 +1,1 @@
-MONGODB_SETTING = {
-    'db': 'todo'
-}
+SECRET_KEY = 'development key'
