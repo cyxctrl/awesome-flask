@@ -2,6 +2,8 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href={{ url_for('static', filename='favicon.ico') }} type="image/x-icon">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href={{ url_for('static',filename='bootstrap.css') }}>
@@ -25,7 +27,7 @@
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url_for('index') }}">Home</a></li>
                     {% if username %}
-                    <li><a href="{{ url_for('todo',username=username) }}">Todo</a></li>
+                    <li><a href="{{ url_for('todos',username=username) }}">Todo</a></li>
                     <li><a href="{{ url_for('logout') }}">Logout</a></li>
                     {% endif %}
                 </ul>
@@ -44,8 +46,9 @@
             {% endif %}
         {% endwith %}
         {% block content %}{% endblock %}
-        <p class="text-center">Powered by <a href="#">Python Webapp</a>. Copyright &copy; 2016.</p>
-        <p class="text-center">All rights reserved.</p>
     </div>
+    <hr />
+    <p class="text-center">Powered by <a href="#">Python Flask</a>. Copyright &copy; 2016.</p>
+    <p class="text-center">All rights reserved.</p>
 </body>
 </html>

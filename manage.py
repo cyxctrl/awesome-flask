@@ -3,7 +3,7 @@
 
 from flask.ext.script import Manager, Server
 from app import app,db
-from app.models import User,Todo,Post
+from app.models import User, Todo
 
 manager = Manager(app)
 

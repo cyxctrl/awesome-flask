@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1 class="text-center text-danger">{{username}}'s Todo List</h1>
+
+<form class="input-group" action="/{{ username }}/todos/add" method="post">
+    <input class="form-control" name="content" type="text" value="" maxlength="100" required="required" placeholder="最多输入100个字符哦">
+    <span class="input-group-btn">
+         <button class="btn btn-primary" type="submit">Add</button>
+    </span>
+</form>
+
+{% if todo_list[0] %}
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <td>Contents</td>
+                <td>Time</td>
+                <td>Status</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for todo in todo_list %}
+            <tr>
+                {% if todo['status'] == 0 %}
+                <td style="width: 70%">{{ todo['content'] }}</td>
+                <td style="width: 15%">{{ todo['time'] }}</td>
+                <td style="width: 15%">
+                <a href="/{{ username }}/todos/undo/{{ todo['_id'] }}" class="btn btn-primary">Undo</a>
+                <a href="/{{ username }}/todos/delete/{{ todo['_id'] }}" class="btn btn-danger">Delete</a>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+            {% for todo in todo_list %}
+            <tr>
+                {% if todo['status'] == 1 %}
+                <td style="width: 70%"><del>{{ todo['content'] }}</del></td>
+                <td style="width: 15%"><del>{{ todo['time'] }}</del></td>
+                <td style="width: 15%">
+                <a href="/{{ username }}/todos/done/{{ todo['_id'] }}" class="btn btn-success">Done</a>
+                <a href="/{{ username }}/todos/delete/{{ todo['_id'] }}" class="btn btn-danger">Delete</a>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<h3 class="text-info">No todos, please add.</h3>
+{% endif %}
+
+{% endblock %}
