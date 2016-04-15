@@ -28,12 +28,17 @@ class Todo():
         db.user.update({'username':username},{'$push':{'todos_id':todo_id}})
 
 class Blog():
-    def __init__(self,author,title,content,time,comment_id=[]):
+    def __init__(self,author,title,article,time,comments_id=[]):
         self.author = author
         self.title = title
-        self.content = content
+        self.article = article
         self.time = time
-        self.comments_id = comment_id
+        self.comments_id = comments_id
+
+    def save(self,username):
+        db.blog.insert({'author':self.author,'title':self.title,'article':self.article,'time':self.time,'comments_id':self.comments_id})
+        blog_id = db.blog.find_one({'author':username,'title':self.title,'time':self.time},'_id')
+        db.user.update({'username':username},{'$push':{'blogs_id':blog_id}})
 
 class Comment():
     def __init__(self,author,content,time):

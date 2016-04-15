@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>{{ blog['title'] }}</h1>
+    <h3>{{ blog['author'] }}
+    <small>~{{ blog['time'] }}</small>
+    </h3>
+    <hr />
+    <div>
+        {{ blog['article']|safe }}
+    </div>
+{% endblock %}

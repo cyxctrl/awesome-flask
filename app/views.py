@@ -1,14 +1,19 @@
 #-*- coding: utf-8 -*-
-from app import app,db
+from app import app, db
 from flask import render_template,request,redirect,url_for,session,flash
 from .models import User, Todo, Blog, Comment
 import pymongo
 import bson
 import datetime
+import os
+
+@app.route('/test')
+def test():
+    return render_template('editor.html')
 
 @app.route('/')
 def index():
-    if session.get('logged_in') == True:
+    if session.get('user'):
         return redirect(url_for('user',username=session.get('user')))
     return render_template('index.html')
 
@@ -61,37 +66,114 @@ def logout():
 @app.route('/<username>')
 def user(username):
     if username == session.get('user'):
-        return render_template('user.html',username=username)
+        blogs_id = db.user.find_one({'username':username})['blogs_id']
+        blog_list = []
+        for bid in blogs_id:
+            bg = db.blog.find_one(bid)
+            blog_list.append(bg)
+        return render_template('user.html',username=username,blog_list=blog_list[::-1])
     return redirect(url_for('index'))
 
 @app.route('/<username>/todos')
 def todos(username):
+    if session.get('user') != username:
+        flash('请登录先！')
+        return redirect('index')
     todos_id = db.user.find_one({'username':username})['todos_id']
     todo_list = []
     for tid in todos_id:
         td = db.todo.find_one(tid)
         todo_list.append(td)
-    return render_template('todos.html',todo_list=todo_list[::-1],username=username)
+    return render_template('todos.html',todo_list=todo_list[::-1])
 
 @app.route('/<username>/todos/add',methods=['POST',])
 def todo_add(username):
+    if session.get('user') != username:
+        flash('请登录先！')
+        return redirect('index')
     content = request.form.get('content')
-    todo = Todo(content=content,time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    todo = Todo(content=content,
+                time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                )
     todo.save(username)
-    return redirect(url_for('todos',username=username))
+    return redirect(url_for('todos'))
 
 @app.route('/<username>/todos/undo/<string:todo_id>')
 def todo_undo(username,todo_id):
+    if session.get('user') != username:
+        flash('请登录先！')
+        return redirect('index')
     db.todo.update({'_id':bson.ObjectId(todo_id)},{'$set':{'status':1}})
-    return redirect(url_for('todos',username=username))
+    return redirect(url_for('todos'))
 
 @app.route('/<username>/todos/done/<string:todo_id>')
 def todo_done(username,todo_id):
+    if session.get('user') != username:
+        flash('请登录先！')
+        return redirect('index')
     db.todo.update({'_id':bson.ObjectId(todo_id)},{'$set':{'status':0}})
-    return redirect(url_for('todos',username=username))
+    return redirect(url_for('todos'))
 
 @app.route('/<username>/todos/delete/<string:todo_id>')
 def todo_delete(username,todo_id):
+    if session.get('user') != username:
+        flash('请登录先！')
+        return redirect('index')
     db.todo.remove({'_id':bson.ObjectId(todo_id)})
     db.user.update({'username':username},{'$pull':{'todos_id':{'_id':bson.ObjectId(todo_id)}}})
-    return redirect(url_for('todos',username=username))
+    return redirect(url_for('todos'))
+
+@app.route('/article/<string:blog_id>')
+def article(blog_id):
+    blog = db.blog.find_one({'_id':bson.ObjectId(blog_id)})
+    username = session.get('user')
+    return render_template('article.html',blog=blog)
+
+@app.route('/editor_add')
+def editor_add():
+    username = session.get('user')
+    return render_template('editor_add.html',username=username)
+
+@app.route('/<username>/blogs/add',methods=['POST',])
+def blog_add(username):
+    if session.get('user') != username:
+        flash('请登录先！')
+        return redirect('index')
+    title = request.form['title']
+    article = request.form['article']
+    blog = Blog(author=session.get('user'),
+                title=title,
+                article=article,
+                time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                )
+    blog.save(username)
+    return redirect(url_for('user',username=username))
+
+@app.route('/editor_modify/<string:blog_id>')
+def editor_modify(blog_id):
+    blog = db.blog.find_one({'_id':bson.ObjectId(blog_id)})
+    blog_id = str(blog['_id'])
+    title = blog['title']
+    article = blog['article']
+    username = session.get('user')
+    return render_template('editor_modify.html',blog_id=blog_id,title=title,article=article,username=username)
+
+@app.route('/<username>/blogs/modify/<string:blog_id>',methods=['POST',])
+def blog_modify(username,blog_id):
+    if session.get('user') != username:
+        flash('请登录先！')
+        return redirect('index')
+    title = request.form['title']
+    article = request.form['article']
+    time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    db.blog.update({'_id':bson.ObjectId(blog_id)},{'$set':{'title':title,'article':article,'time':time}})
+    return redirect(url_for('user',username=username))
+
+@app.route('/<username>/blogs/delete/<string:blog_id>')
+def blog_delete(username,blog_id):
+    if session.get('user') != username:
+        flash('请登录先！')
+        return redirect('index')
+    db.blog.remove({'_id':bson.ObjectId(blog_id)})
+    db.user.update({'username':username},{'$pull':{'blogs_id':{'_id':bson.ObjectId(blog_id)}}})
+    return redirect(url_for('user',username=username))

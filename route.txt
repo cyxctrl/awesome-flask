@@ -4,7 +4,7 @@
 登录: GET POST /login
 注销: GET /logout
 用户资料页: GET /<username>
- 
+
 获取Todo: GET /<username>/todos
 创建Todo: POST /<username>/todos/add
 删除Todo: GET /<username>/todos/delete/<string:todo_id>
@@ -13,14 +13,15 @@
 
 获取日志: GET /<username>/blogs
 创建日志: POST /<username>/blogs/add
-修改日志: POST /<username>/blogs/modify
-删除日志: POST /<username>/blogs/delete
+修改日志: POST /<username>/blogs/modify/<string:blog_id>
+删除日志: POST /<username>/blogs/delete/<string:blog_id>
+
 获取评论: GET /api/comments
 创建评论: POST /api/blogs/:blog_id/comments
 删除评论: POST /api/comments/:comment_id/delete
 创建新用户: POST /api/users
 获取用户: GET /api/users
-----管理页面包括: 
+----管理页面包括:
 评论列表页: GET /manage/comments
 日志列表页: GET /manage/blogs
 创建日志页: GET /manage/blogs/create

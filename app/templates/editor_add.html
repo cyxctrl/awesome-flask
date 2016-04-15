@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
+
+<form action="/{{ username }}/blogs/add" method="post">
+    <div class="form-group">
+        <label>Title</label>
+        <input type="text" class="form-control" name="title" placeholder="Enter Title">
+    </div>
+    <div class="form-group">
+        <label>Content</label>
+        <textarea name="article" id="editor" class="ckeditor" rows="100" cols="80">
+            {{ article }}
+        </textarea>
+    </div>
+    <button type="submit" class="btn btn-default">增加</button>
+</form>
+
+{% endblock %}
