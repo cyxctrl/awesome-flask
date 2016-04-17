@@ -7,4 +7,6 @@ app.config.from_object('config')
 
 db = pymongo.MongoClient('localhost', 27017).test
 
+#db = pymongo.MongoClient("mongo.duapp.com", 8908).oLNwgqNbtTNsiNjFoDGn
+
 from app import views, models

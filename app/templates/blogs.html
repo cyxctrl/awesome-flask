@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if session.get('logged_in') %}
+
+<h1 class="text-center text-danger">{{ session.get('user') }} BLOG List</h1>
+
+{% if blog_list[0] %}
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <td>Time</td>
+                <td>Title</td>
+                <td>Do</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for blog in blog_list %}
+            <tr>
+                <td style="width: 20%">{{ blog['time'] }}</td>
+                <td style="width: 20%">{{ blog['title'] }}</td>
+                <td style="width: 20%">
+                    <a href="/article/{{ blog['_id'] }}" class="btn btn-primary">查看</a>
+                    <a href="/{{ session.get('user') }}/editor/{{ blog['_id'] }}" class="btn btn-success">修改</a>
+                    <a href="/{{ session.get('user') }}/blogs/delete/{{ blog['_id'] }}" class="btn btn-danger">删除</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<h3 class="text-info">No blogs, please add.</h3>
+{% endif %}
+<p><a href="{{ url_for('editor_add',username=session.get('user')) }}">+ 增加文章 +</a></p>
+
+{% else %}
+<p><a href="{{ url_for('index') }}"></a>请登陆。</p>
+{% endif %}
+
+{% endblock %}

@@ -26,8 +26,9 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url_for('index') }}">Home</a></li>
-                    {% if session.get('user') %}
-                    <li><a href="{{ url_for('todos',username=username) }}">Todo</a></li>
+                    {% if session.get('logged_in') %}
+                    <li><a href="{{ url_for('blogs',username=session.get('user')) }}">Blog</a></li>
+                    <li><a href="{{ url_for('todos',username=session.get('user')) }}">Todo</a></li>
                     <li><a href="{{ url_for('logout') }}">Logout</a></li>
                     {% endif %}
                 </ul>
@@ -40,14 +41,14 @@
             {% for message in messages %}
             <div class="alert alert-danger" role="alert">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{ message }}
+                {{ message }}
             </div>
             {% endfor %}
             {% endif %}
         {% endwith %}
         {% block content %}{% endblock %}
+        <hr />
     </div>
-    <hr />
     <div>
         <p class="text-center">Powered by <a href="#">Python Flask</a>. Copyright &copy; 2016.</p>
         <p class="text-center">All rights reserved.</p>

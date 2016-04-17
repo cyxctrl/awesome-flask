@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1 class="text-center text-danger">{{ session.get('user') }}'s Todo List</h1>
+{% if session.get('logged_in') %}
+<h1 class="text-center text-danger">{{ session.get('user') }} TODO List</h1>
 
-<form class="input-group" action="/{{ username }}/todos/add" method="post">
+<form class="input-group" action="/{{ session.get('user') }}/todos/add" method="post">
     <input class="form-control" name="content" type="text" value="" maxlength="100" required="required" placeholder="最多输入100个字符哦">
     <span class="input-group-btn">
          <button class="btn btn-primary" type="submit">Add</button>
@@ -24,11 +25,11 @@
             {% for todo in todo_list %}
             <tr>
                 {% if todo['status'] == 0 %}
-                <td style="width: 70%">{{ todo['content'] }}</td>
+                <td style="width: 15%">{{ todo['content'] }}</td>
                 <td style="width: 15%">{{ todo['time'] }}</td>
                 <td style="width: 15%">
-                <a href="/{{ username }}/todos/undo/{{ todo['_id'] }}" class="btn btn-primary">Undo</a>
-                <a href="/{{ username }}/todos/delete/{{ todo['_id'] }}" class="btn btn-danger">Delete</a>
+                <a href="/{{ session.get('user') }}/todos/undo/{{ todo['_id'] }}" class="btn btn-primary">Undo</a>
+                <a href="/{{ session.get('user') }}/todos/delete/{{ todo['_id'] }}" class="btn btn-danger">Delete</a>
                 </td>
                 {% endif %}
             </tr>
@@ -36,11 +37,11 @@
             {% for todo in todo_list %}
             <tr>
                 {% if todo['status'] == 1 %}
-                <td style="width: 70%"><del>{{ todo['content'] }}</del></td>
+                <td style="width: 15%"><del>{{ todo['content'] }}</del></td>
                 <td style="width: 15%"><del>{{ todo['time'] }}</del></td>
                 <td style="width: 15%">
-                <a href="/{{ username }}/todos/done/{{ todo['_id'] }}" class="btn btn-success">Done</a>
-                <a href="/{{ username }}/todos/delete/{{ todo['_id'] }}" class="btn btn-danger">Delete</a>
+                <a href="/{{ session.get('user') }}/todos/done/{{ todo['_id'] }}" class="btn btn-success">Done</a>
+                <a href="/{{ session.get('user') }}/todos/delete/{{ todo['_id'] }}" class="btn btn-danger">Delete</a>
                 </td>
                 {% endif %}
             </tr>
@@ -50,6 +51,10 @@
 </div>
 {% else %}
 <h3 class="text-info">No todos, please add.</h3>
+{% endif %}
+
+{% else %}
+<p><a href="{{ url_for('index') }}"></a>请登陆。</p>
 {% endif %}
 
 {% endblock %}
