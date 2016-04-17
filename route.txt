@@ -12,8 +12,10 @@
 更改Todo状态-->done: POST /<username>/todos/done/<string:todo_id>
 
 获取日志: GET /<username>/blogs
-创建日志: POST /<username>/blogs/add
-修改日志: POST /<username>/blogs/modify/<string:blog_id>
+创建日志: GET /<username>/editor
+        POST /<username>/blogs/add
+修改日志: GET /<username>/editor/<string:blog_id>
+        POST /<username>/blogs/modify/<string:blog_id>
 删除日志: POST /<username>/blogs/delete/<string:blog_id>
 
 获取评论: GET /api/comments

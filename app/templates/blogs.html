@@ -2,8 +2,6 @@
 
 {% block content %}
 
-{% if session.get('logged_in') %}
-
 <h1 class="text-center text-danger">{{ session.get('user') }} BLOG List</h1>
 
 {% if blog_list[0] %}
@@ -35,9 +33,5 @@
 <h3 class="text-info">No blogs, please add.</h3>
 {% endif %}
 <p><a href="{{ url_for('editor_add',username=session.get('user')) }}">+ 增加文章 +</a></p>
-
-{% else %}
-<p><a href="{{ url_for('index') }}"></a>请登陆。</p>
-{% endif %}
 
 {% endblock %}

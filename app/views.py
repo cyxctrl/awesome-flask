@@ -69,7 +69,8 @@ def logout():
 def user(username):
     if username == session.get('user') and session.get('logged_in'):
         return render_template('user.html')
-    return redirect(url_for('index'))
+    else:
+        return redirect(url_for('index'))
 
 @app.route('/<username>/todos')
 def todos(username):

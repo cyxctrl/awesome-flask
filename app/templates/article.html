@@ -9,5 +9,8 @@
     <div>
         {{ blog['article']|safe }}
     </div>
+    {% if session.get('logged_in') and session.get('user') == blog['author'] %}
+    <p class="text-right"><a href="{{ url_for('editor_modify',username=session.get('user'),blog_id=blog['_id']) }}">编辑文章</a> </p>
+    {% endif %}
     <p class="text-right"><a href="javascript:history.go(-1)">返回上一页</a> </p>
 {% endblock %}
