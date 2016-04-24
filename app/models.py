@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-from app import app, db
+from app import mongo
 
 class User():
     def __init__(self,username,password,blogs_id=[],todos_id=[]):
@@ -9,7 +9,7 @@ class User():
         self.blogs_id = blogs_id
 
     def save(self):
-        db.user.insert(
+        mongo.db.user.insert(
             {'username':self.username,
             'password':self.password,
             'todos_id':self.todos_id,
@@ -23,9 +23,9 @@ class Todo():
         self.status = status
 
     def save(self,username):
-        db.todo.insert({'content':self.content,'time':self.time,'status':self.status})
-        todo_id = db.todo.find_one({'content':self.content,'time':self.time},'_id')
-        db.user.update({'username':username},{'$push':{'todos_id':todo_id}})
+        mongo.db.todo.insert({'content':self.content,'time':self.time,'status':self.status})
+        todo_id = mongo.db.todo.find_one({'content':self.content,'time':self.time},'_id')
+        mongo.db.user.update({'username':username},{'$push':{'todos_id':todo_id}})
 
 class Blog():
     def __init__(self,author,title,article,time,comments_id=[]):
@@ -36,9 +36,9 @@ class Blog():
         self.comments_id = comments_id
 
     def save(self,username):
-        db.blog.insert({'author':self.author,'title':self.title,'article':self.article,'time':self.time,'comments_id':self.comments_id})
-        blog_id = db.blog.find_one({'author':username,'title':self.title,'time':self.time},'_id')
-        db.user.update({'username':username},{'$push':{'blogs_id':blog_id}})
+        mongo.db.blog.insert({'author':self.author,'title':self.title,'article':self.article,'time':self.time,'comments_id':self.comments_id})
+        blog_id = mongo.db.blog.find_one({'author':username,'title':self.title,'time':self.time},'_id')
+        mongo.db.user.update({'username':username},{'$push':{'blogs_id':blog_id}})
 
 class Comment():
     def __init__(self,author,content,time):
