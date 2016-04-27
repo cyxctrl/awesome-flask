@@ -24,7 +24,7 @@ class Todo():
 
     def save(self,username):
         mongo.db.todo.insert({'content':self.content,'time':self.time,'status':self.status})
-        todo_id = mongo.db.todo.find_one({'content':self.content,'time':self.time},'_id')
+        todo_id = mongo.db.todo.find_one({'content':self.content,'time':self.time},'_id')['_id']
         mongo.db.user.update({'username':username},{'$push':{'todos_id':todo_id}})
 
 class Blog():
@@ -37,7 +37,7 @@ class Blog():
 
     def save(self,username):
         mongo.db.blog.insert({'author':self.author,'title':self.title,'article':self.article,'time':self.time,'comments_id':self.comments_id})
-        blog_id = mongo.db.blog.find_one({'author':username,'title':self.title,'time':self.time},'_id')
+        blog_id = mongo.db.blog.find_one({'author':username,'title':self.title,'time':self.time},'_id')['_id']
         mongo.db.user.update({'username':username},{'$push':{'blogs_id':blog_id}})
 
 class Comment():
@@ -45,3 +45,9 @@ class Comment():
         self.author = author
         self.content = content
         self.time = time
+
+    def save(self,blog_id):
+        mongo.db.comment.insert({'author':self.author,'content':self.content,'time':self.time})
+        comment_id = mongo.db.comment.find_one({'author':self.author,'content':self.content,'time':self.time},'_id')['_id']
+        mongo.db.blog.update({'_id':blog_id},{'$push':{'comments_id':comment_id}})
+

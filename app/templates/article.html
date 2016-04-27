@@ -1,16 +1,38 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <script src="//cdn.ckeditor.com/4.5.8/basic/ckeditor.js"></script>
+
     <h1>{{ blog['title'] }}</h1>
-    <h3>{{ blog['author'] }}
-    <small>~{{ blog['time'] }}</small>
-    </h3>
+    <h3>{{ blog['author'] }}<small>~{{ blog['time'] }}</small></h3>
     <hr />
     <div>
         {{ blog['article']|safe }}
     </div>
-    {% if session.get('logged_in') and session.get('user') == blog['author'] %}
-    <p class="text-right"><a href="{{ url_for('blog.editor_modify',username=session.get('user'),blog_id=blog['_id']) }}">编辑文章</a> </p>
+    <hr />
+    {% if comment_list[0] %}
+        <h2>Reviews</h2>
+        {% for comment in comment_list %}
+        <div>
+            <p>{{ comment['author'] }}</p>
+            <p>{{ comment['time'] }}</p>
+            <p>{{ comment['content']|safe }}</p>
+            <a href="/article/{{ blog['_id'] }}/del_comment/{{ comment['_id'] }}" class="btn btn-danger">Delete</a>
+        </div>
+        {% endfor %}
     {% endif %}
+
+    <h3>添加评论</h3>
+    <form action="/article/{{ blog['_id'] }}/add_comment" method="post">
+        <textarea name="content" id="editor" class="ckeditor" rows="100" cols="80">
+        </textarea>
+        <button type="submit" class="btn btn-default">提交</button>
+    </form>
+
+
+    {% if session.get('logged_in') and session.get('user') == blog['author'] %}
+        <p class="text-right"><a href="{{ url_for('blog.editor_modify',username=session.get('user'),blog_id=blog['_id']) }}">编辑文章</a> </p>
+    {% endif %}
+
     <p class="text-right"><a href="javascript:history.go(-1)">返回上一页</a> </p>
 {% endblock %}

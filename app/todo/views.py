@@ -54,7 +54,7 @@ def todo_done(username,todo_id):
 def todo_delete(username,todo_id):
     if username == session.get('user') and session.get('logged_in'):
         mongo.db.todo.remove({'_id':bson.ObjectId(todo_id)})
-        mongo.db.user.update({'username':username},{'$pull':{'todos_id':{'_id':bson.ObjectId(todo_id)}}})
+        mongo.db.user.update({'username':username},{'$pull':{'todos_id':bson.ObjectId(todo_id)}})
         return redirect(url_for('.todos',username=username))
     else:
         flash('请登录先！')

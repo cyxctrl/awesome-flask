@@ -9,7 +9,11 @@ import datetime
 @blog.route('/article/<string:blog_id>')
 def article(blog_id):
     blog = mongo.db.blog.find_one({'_id':bson.ObjectId(blog_id)})
-    return render_template('article.html',blog=blog)
+    comment_list = []
+    for cid in blog['comments_id']:
+        comment = mongo.db.comment.find_one({'_id':cid})
+        comment_list.append(comment)
+    return render_template('article.html',blog=blog,comment_list=comment_list)
 
 @blog.route('/<username>/blogs')
 def blogs(username):
@@ -79,8 +83,35 @@ def blog_modify(username,blog_id):
 def blog_delete(username,blog_id):
     if username == session.get('user') and session.get('logged_in'):
         mongo.db.blog.remove({'_id':bson.ObjectId(blog_id)})
-        mongo.db.user.update({'username':username},{'$pull':{'blogs_id':{'_id':bson.ObjectId(blog_id)}}})
+        mongo.db.user.update({'username':username},
+            {'$pull':{'blogs_id':bson.ObjectId(blog_id)}})
         return redirect(url_for('.blogs',username=username))
     else:
         flash('请登录先！')
         return redirect(url_for('main.index'))
+
+@blog.route('/article/<string:blog_id>/add_comment',methods=['POST'])
+def blog_add_comment(blog_id):
+    if session.get('logged_in') and request.method == 'POST':
+        comment = Comment(author=session.get('user'),
+                        content = request.form['content'],
+                        time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        )
+        comment.save(bson.ObjectId(blog_id))
+        flash('评论成功！')
+        return redirect(url_for('.article',blog_id=blog_id))
+    else:
+        flash('请登录先！')
+        return redirect(url_for('.article',blog_id=blog_id))
+
+@blog.route('/article/<string:blog_id>/del_comment/<string:comment_id>')
+def blog_del_comment(blog_id,comment_id):
+    if session.get('logged_in'):
+        mongo.db.comment.remove({'_id':bson.ObjectId(comment_id)})
+        mongo.db.blog.update({'_id':bson.ObjectId(blog_id)},
+            {'$pull':{'comments_id':bson.ObjectId(comment_id)}})
+        flash('删除成功！')
+        return redirect(url_for('.article',blog_id=blog_id))
+    else:
+        flash('请登录先！')
+        return redirect(url_for('.article',blog_id=blog_id))

@@ -14,6 +14,7 @@ class DevelopmentConfig(Config):
     MONGO_DBNAME = 'awesome_flask'
 
 class ProductionConfig(Config):
+    DEBUG = False
     MONGO_HOST = 'mongo.duapp.com'
     MONGO_PORT = 8909
     MONGO_DBNAME = 'oLNwgqNbtTNsiNjFoDGn'
