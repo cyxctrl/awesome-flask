@@ -17,12 +17,16 @@
         <tbody>
             {% for blog in blog_list %}
             <tr>
-                <td style="width: 20%">{{ blog['time'] }}</td>
+                <td style="width: 20%">
+                    创建时间：{{ blog['create_time'] }}
+                    <br />
+                    上次修改时间：{{ blog['last_modify_time'] }}
+                    </td>
                 <td style="width: 20%">{{ blog['title'] }}</td>
                 <td style="width: 20%">
-                    <a href="/article/{{ blog['_id'] }}" class="btn btn-primary">查看</a>
-                    <a href="/{{ session.get('user') }}/editor/{{ blog['_id'] }}" class="btn btn-success">修改</a>
-                    <a href="/{{ session.get('user') }}/blogs/delete/{{ blog['_id'] }}" class="btn btn-danger">删除</a>
+                    <a href="{{ url_for('blog.article',blog_id=blog['_id']) }}" class="btn btn-primary">查看</a>
+                    <a href="{{ url_for('blog.editor_modify',blog_id=blog['_id']) }}" class="btn btn-success">修改</a>
+                    <a href="{{ url_for('blog.blog_delete',blog_id=blog['_id']) }}" class="btn btn-danger">删除</a>
                 </td>
             </tr>
             {% endfor %}

@@ -27,8 +27,8 @@
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url_for('main.index') }}">Profile</a></li>
                     {% if session.get('logged_in') %}
-                    <li><a href="{{ url_for('blog.blogs',username=session.get('user')) }}">Blog</a></li>
-                    <li><a href="{{ url_for('todo.todos',username=session.get('user')) }}">Todo</a></li>
+                    <li><a href="{{ url_for('blog.blogs') }}">Blog</a></li>
+                    <li><a href="{{ url_for('todo.todos') }}">Todo</a></li>
                     <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
                     {% endif %}
                 </ul>

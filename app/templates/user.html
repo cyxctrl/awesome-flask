@@ -2,6 +2,8 @@
 
 {% block content %}
 
-<h1>Hello, {{ session.get('user') }}</h1>
+<h1>Hello, {{ user['username'] }}</h1>
+<p>上次登录：{{ user['last_login_time'] }}</p>
+<p>注册时间：{{ user['register_time'] }}</p>
 
 {% endblock %}

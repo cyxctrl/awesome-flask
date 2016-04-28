@@ -1,11 +1,6 @@
 #-*- coding: utf-8 -*-
 from flask import render_template, request, redirect, url_for, session, flash
 from . import main
-#from .forms import
-from .. import mongo
-import bson
-import datetime
-
 
 @main.route('/test')
 def test():

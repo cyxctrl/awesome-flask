@@ -8,7 +8,7 @@
 </script>
 
 <div>
-    <a href="https://github.com/cyxctrl">
+    <a href="https://github.com/cyxctrl" target="_blank">
         <img class="center-block" src="{{ url_for('static',filename='index4.jpg') }}">
     </a>
 </div>
@@ -28,7 +28,7 @@
     </ul>
     <div id="myTabContent" class="tab-content">
         <div class="tab-pane fade in active" id="login">
-            <form role="form" action="/login" method="post">
+            <form role="form" action="{{ url_for('auth.login') }}" method="post">
                 <p></p>
                 <div class="form-group">
                     <label>Username</label>
@@ -42,7 +42,7 @@
             </form>
         </div>
         <div class="tab-pane fade" id="register">
-            <form role="form" action="/register" method="post">
+            <form role="form" action="{{ url_for('auth.register') }}" method="post">
                 <div class="form-group">
                     <p></p>
                     <label>Username</label>

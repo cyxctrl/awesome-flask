@@ -3,7 +3,7 @@
 
 <h1 class="text-center text-danger">{{ session.get('user') }} TODO List</h1>
 
-<form class="input-group" action="/{{ session.get('user') }}/todos/add" method="post">
+<form class="input-group" action="{{ url_for('todo.todo_add') }}" method="post">
     <input class="form-control" name="content" type="text" value="" maxlength="100" required="required" placeholder="最多输入100个字符哦">
     <span class="input-group-btn">
          <button class="btn btn-primary" type="submit">Add</button>
@@ -25,10 +25,10 @@
             <tr>
                 {% if todo['status'] == 0 %}
                 <td style="width: 15%">{{ todo['content'] }}</td>
-                <td style="width: 15%">{{ todo['time'] }}</td>
+                <td style="width: 15%">{{ todo['create_time'] }}</td>
                 <td style="width: 15%">
-                <a href="/{{ session.get('user') }}/todos/undo/{{ todo['_id'] }}" class="btn btn-primary">Undo</a>
-                <a href="/{{ session.get('user') }}/todos/delete/{{ todo['_id'] }}" class="btn btn-danger">Delete</a>
+                <a href="{{ url_for('todo.todo_undo',todo_id=todo['_id']) }}" class="btn btn-primary">Undo</a>
+                <a href="{{ url_for('todo.todo_delete',todo_id=todo['_id']) }}" class="btn btn-danger">Delete</a>
                 </td>
                 {% endif %}
             </tr>
@@ -37,10 +37,10 @@
             <tr>
                 {% if todo['status'] == 1 %}
                 <td style="width: 15%"><del>{{ todo['content'] }}</del></td>
-                <td style="width: 15%"><del>{{ todo['time'] }}</del></td>
+                <td style="width: 15%"><del>{{ todo['create_time'] }}</del></td>
                 <td style="width: 15%">
-                <a href="/{{ session.get('user') }}/todos/done/{{ todo['_id'] }}" class="btn btn-success">Done</a>
-                <a href="/{{ session.get('user') }}/todos/delete/{{ todo['_id'] }}" class="btn btn-danger">Delete</a>
+                <a href="{{ url_for('todo.todo_done',todo_id=todo['_id']) }}" class="btn btn-success">Done</a>
+                <a href="{{ url_for('todo.todo_delete',todo_id=todo['_id']) }}" class="btn btn-danger">Delete</a>
                 </td>
                 {% endif %}
             </tr>
