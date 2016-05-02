@@ -1,10 +1,10 @@
-{% extends "base.html" %}
+{% extends "base_logged.html" %}
 
 {% block content %}
     <script src="//cdn.ckeditor.com/4.5.8/basic/ckeditor.js"></script>
 
     <h1>{{ blog['title'] }}</h1>
-    <h3>{{ blog['author'] }}<small>~{{ blog['create_time'] }}</small></h3>
+    <h3>{{ blog['author'] }}<small>~{{ momentjs(blog['create_time']).format('YYYY-MM-DD HH:mm') }}</small></h3>
     <hr />
     <div>
         {{ blog['article']|safe }}
@@ -15,7 +15,7 @@
         {% for comment in comment_list %}
         <div>
             <p>{{ comment['author'] }}</p>
-            <p>{{ comment['time'] }}</p>
+            <p>{{ momentjs(comment['create_time']).format('YYYY-MM-DD HH:mm') }}</p>
             <p>{{ comment['content']|safe }}</p>
             {% if session.get('logged_in') and session.get('user') == blog['author'] %}
             <a href="{{ url_for('blog.blog_del_comment',blog_id=blog['_id'],comment_id=comment['_id']) }}" class="btn btn-danger">Delete</a>

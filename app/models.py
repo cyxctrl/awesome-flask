@@ -2,7 +2,8 @@
 from app import mongo
 
 class User():
-    def __init__(self,username,password,register_time,last_login_time,blogs_id=[],todos_id=[]):
+    def __init__(self,username,password,email,register_time,last_login_time,blogs_id=[],todos_id=[]):
+        self.email           = email
         self.username        = username
         self.password        = password
         self.register_time   = register_time
@@ -13,6 +14,7 @@ class User():
     def save(self):
         mongo.db.user.insert(
             {
+                'email':self.email,
                 'username':self.username,
                 'password':self.password,
                 'todos_id':self.todos_id,

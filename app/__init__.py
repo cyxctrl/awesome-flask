@@ -3,20 +3,19 @@ from flask import Flask
 from flask.ext.pymongo import PyMongo
 from flask.ext.moment import Moment
 from config import config
-#import pymongo
+from .momentjs import momentjs
 
 mongo = PyMongo()
-moment = Moment()
 
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 
+    app.jinja_env.globals['momentjs'] = momentjs
     mongo.init_app(app)
-    moment.init_app(app)
 
-    from .main import main as main_blueprint
+    from .home import home as main_blueprint
     from .auth import auth as auth_blueprint
     from .profile import profile as profile_blueprint
     from .blog import blog as blog_blueprint

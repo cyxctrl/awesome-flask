@@ -1,0 +1,46 @@
+{% extends "base_not_logged.html" %}
+
+{% block content %}
+<form role="form" action="{{ url_for('auth.login') }}" method="post">
+    <div class="form-group">
+        {{ loginform.hidden_tag() }}
+    </div>
+
+    <div class="form-group">
+        {% if loginform.username.errors %}
+        <div class="has-error">
+            {{ loginform.username(class="form-control",placeholder=loginform.username.label.text) }}
+            <dl>
+                {% for error in loginform.username.errors %}
+                <dd class="text-danger">{{ error }}</dd>
+                {% endfor %}
+            </dl>
+         </div>
+        {% else %}
+            {{ loginform.username(class="form-control",placeholder=loginform.username.label.text) }}
+        {% endif %}
+
+        {% if loginform.password.errors %}
+        <div class="has-error">
+            {{ loginform.password(class="form-control",placeholder=loginform.password.label.text) }}
+            {% for error in loginform.password.errors %}
+            <dl>
+                <dd class="text-danger">{{ error }}</dd>
+            </dl>
+            {% endfor %}
+         </div>
+        {% else %}
+            {{ loginform.password(class="form-control",placeholder=loginform.password.label.text) }}
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        {{ loginform.submit(class="btn btn-primary", style="width: 100%") }}
+    </div>
+
+    <div class="form-group">
+        <a class="btn btn-default" href="{{ url_for('auth.register') }}" role="button">还没有账号？</a>
+    </div>
+</form>
+
+{% endblock %}

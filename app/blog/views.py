@@ -34,7 +34,7 @@ def blogs():
         )
     else:
         flash('请登录先！')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('home.index'))
 
 @blog.route('/editor')
 def editor_add():
@@ -42,7 +42,7 @@ def editor_add():
         return render_template('editor.html')
     else:
         flash('请登录先！')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('home.index'))
 
 @blog.route('/blogs/add',methods=['POST'])
 def blog_add():
@@ -53,13 +53,13 @@ def blog_add():
             title            = request.form['title'],
             article          = request.form['article'],
             create_time      = datetime.datetime.utcnow(),
-            last_modify_time = '-'
+            last_modify_time = datetime.datetime.utcnow()
         )
         blog.save(username)
         return redirect(url_for('.blogs'))
     else:
         flash('请登录先！')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('home.index'))
 
 @blog.route('/editor/<string:blog_id>')
 def editor_modify(blog_id):
@@ -72,7 +72,7 @@ def editor_modify(blog_id):
         )
     else:
         flash('请登录先！')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('home.index'))
 
 @blog.route('/blogs/modify/<string:blog_id>',methods=['POST'])
 def blog_modify(blog_id):
@@ -94,7 +94,7 @@ def blog_modify(blog_id):
         return redirect(url_for('.blogs',username=username))
     else:
         flash('请登录先！')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('home.index'))
 
 @blog.route('/blogs/delete/<string:blog_id>')
 def blog_delete(blog_id):
@@ -110,7 +110,7 @@ def blog_delete(blog_id):
         return redirect(url_for('.blogs'))
     else:
         flash('请登录先！')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('home.index'))
 
 @blog.route('/article/<string:blog_id>/add_comment',methods=['POST'])
 def blog_add_comment(blog_id):

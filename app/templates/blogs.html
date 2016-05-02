@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_logged.html" %}
 
 {% block content %}
 
@@ -18,9 +18,9 @@
             {% for blog in blog_list %}
             <tr>
                 <td style="width: 20%">
-                    创建时间：{{ blog['create_time'] }}
+                    创建时间：{{ momentjs(blog['create_time']).format('YYYY-MM-DD HH:mm') }}
                     <br />
-                    上次修改时间：{{ blog['last_modify_time'] }}
+                    上次修改时间：{{ momentjs(blog['last_modify_time']).format('YYYY-MM-DD HH:mm') }}
                     </td>
                 <td style="width: 20%">{{ blog['title'] }}</td>
                 <td style="width: 20%">

@@ -1,52 +1,55 @@
 #-*- coding: utf-8 -*-
-from flask import request, render_template, flash, redirect, session, url_for
+from flask import request, render_template, flash, redirect, session, url_for, g
+from werkzeug.security import generate_password_hash, check_password_hash
 from . import auth
 from .. import mongo
 from ..models import User
+from ..forms import LoginForm, RegisterForm
 import datetime
+import random
 
-@auth.route('/register',methods=['POST'])
+@auth.route('/register',methods=['GET','POST'])
 def register():
-    username_register = request.form['username']
-    password_register = request.form['password']
-    if mongo.db.user.find_one({'username':username_register}):
-        flash('用户名已存在！')
-        return redirect(url_for('main.index'))
-    else:
+    registerform = RegisterForm()
+    if registerform.validate_on_submit():
         user = User(
-            username        = username_register,
-            password        = password_register,
+            email           = registerform.email.data,
+            username        = registerform.username.data,
+            password        = generate_password_hash(registerform.password.data),
             register_time   = datetime.datetime.utcnow(),
             last_login_time = datetime.datetime.utcnow()
         )
         user.save()
         flash('注册成功！')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('auth.login'))
+    bgname = str(int(random.random()*20))+'.jpg'
+    return render_template('register.html',registerform=registerform,bgname=bgname)
 
-@auth.route('/login',methods=['POST'])
+@auth.route('/login',methods=['GET','POST'])
 def login():
-    username_login = request.form['username']
-    password_login = request.form['password']
-    if mongo.db.user.find_one(
-        {
-            'username':username_login,
-            'password':password_login
-        }
-    ):
-        session['logged_in'] = True
-        session['user']      = username_login
-        mongo.db.user.update(
-            {'username':username_login},
-            {'$set':{'last_login_time':datetime.datetime.utcnow()}}
-        )
-        return redirect(url_for('main.index'))
-    else:
-        flash('用户不存在？账号错误？密码错误？')
-        return render_template('index.html')
+    loginform = LoginForm()
+    if loginform.validate_on_submit():
+        username_login = loginform.username.data
+        password_login = loginform.password.data
+        if '@' in username_login:
+            user = mongo.db.user.find_one({'email':username_login})
+        else:
+            user = mongo.db.user.find_one({'username':username_login})
+        if user and check_password_hash(user['password'],password_login):
+            session['logged_in'] = True
+            session['user']      = user['username']
+            mongo.db.user.update(
+                {'username':user['username']},
+                {'$set':{'last_login_time':datetime.datetime.utcnow()}}
+            )
+        return redirect(url_for('profile.user',username=user['username']))
+    bgname = str(int(random.random()*20))+'.jpg'
+    return render_template('login.html',loginform=loginform,bgname=bgname)
 
 @auth.route('/logout')
 def logout():
     session.pop('logged_in', None)
     session.pop('user', None)
     flash('注销成功！')
-    return redirect(url_for('main.index'))
+    bgname = str(int(random.random()*20))+'.jpg'
+    return render_template('index.html',bgname=bgname)

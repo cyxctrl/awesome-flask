@@ -7,6 +7,15 @@ from .. import mongo
 def user(username):
     if username == session.get('user') and session.get('logged_in'):
         user = mongo.db.user.find_one({'username':username})
-        return render_template('user.html',user=user)
+        time = user['register_time']
+        return render_template('user.html',user=user,time=time)
     else:
-        return redirect(url_for('main.index'))
+        return redirect(url_for('home.index'))
+
+@profile.route('/modify_password')
+def modify_password():
+    pass
+
+@profile.route('/modify_email')
+def modify_email():
+    pass

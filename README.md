@@ -7,7 +7,7 @@
 - Ubuntu 15.10
 - Sublime Text 3
 - FLask 0.10.1
-- Python 3.4.3   #请放手Python2.7, 拥抱Python3
+- Python 3.4.3
 - virtualenv 1.11.6
 
 
@@ -28,7 +28,7 @@ $ git clone git@github.com:cyxctrl/awesome-flask.git
 
 You can use the blog simply, just to do below:
 
-```
+```c
 $ cd awesome-flask
 $ pip install -r requirements.txt   #install all tools
 $ python manage.py runserver
@@ -36,7 +36,7 @@ $ python manage.py runserver
 
 or use virtual environment:
 
-'''
+'''c
 #based on Ubuntu 15.10
 $ sudo apt-get install virtualenv   #install virtual environment
 $ cd awesome-flask
@@ -46,7 +46,7 @@ $ pip install -r requirements.txt   #install all tools
 $ python manage.py runserver
 '''
 
-'''
+'''c
 open the website(chrome best) and input
 http://127.0.0.1:5000/
 ```

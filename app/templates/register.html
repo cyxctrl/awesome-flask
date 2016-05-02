@@ -1,0 +1,71 @@
+{% extends "base_not_logged.html" %}
+
+{% block content %}
+<form role="form" action="{{ url_for('auth.register') }}" method="post">
+    <div class="form-group">
+        {{ registerform.hidden_tag() }}
+    </div>
+
+    <div class="form-group">
+        {% if registerform.email.errors %}
+        <div class="has-error">
+            {{ registerform.email(class="form-control",placeholder=registerform.email.label.text) }}
+            <dl>
+                {% for error in registerform.email.errors %}
+                <dd class="text-danger">{{ error }}</dd>
+                {% endfor %}
+            </dl>
+         </div>
+        {% else %}
+            {{ registerform.email(class="form-control",placeholder=registerform.email.label.text) }}
+        {% endif %}
+
+        {% if registerform.username.errors %}
+        <div class="has-error">
+            {{ registerform.username(class="form-control",placeholder=registerform.username.label.text) }}
+            <dl>
+                {% for error in registerform.username.errors %}
+                <dd class="text-danger">{{ error }}</dd>
+                {% endfor %}
+            </dl>
+         </div>
+        {% else %}
+            {{ registerform.username(class="form-control",placeholder=registerform.username.label.text) }}
+        {% endif %}
+
+        {% if registerform.password.errors %}
+        <div class="has-error">
+            {{ registerform.password(class="form-control",placeholder=registerform.password.label.text) }}
+            <dl>
+                {% for error in registerform.password.errors %}
+                <dd class="text-danger">{{ error }}</dd>
+                {% endfor %}
+            </dl>
+         </div>
+        {% else %}
+            {{ registerform.password(class="form-control",placeholder=registerform.password.label.text) }}
+        {% endif %}
+
+        {% if registerform.password2.errors %}
+        <div class="has-error">
+            {{ registerform.password2(class="form-control",placeholder=registerform.password2.label.text) }}
+            <dl>
+                {% for error in registerform.password2.errors %}
+                <dd class="text-danger">{{ error }}</dd>
+                {% endfor %}
+            </dl>
+         </div>
+        {% else %}
+            {{ registerform.password2(class="form-control",placeholder=registerform.password2.label.text) }}
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+        {{ registerform.submit(class="btn btn-primary", style="width: 100%") }}
+    </div>
+
+    <div class="form-group">
+        <a class="btn btn-default" href="{{ url_for('auth.login') }}" role="button">已有账号？</a>
+    </div>
+</form>
+{% endblock %}

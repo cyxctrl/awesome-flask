@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_logged.html' %}
 {% block content %}
 
 <h1 class="text-center text-danger">{{ session.get('user') }} TODO List</h1>
@@ -25,7 +25,7 @@
             <tr>
                 {% if todo['status'] == 0 %}
                 <td style="width: 15%">{{ todo['content'] }}</td>
-                <td style="width: 15%">{{ todo['create_time'] }}</td>
+                <td style="width: 15%">{{ momentjs(todo['create_time']).format('YYYY-MM-DD HH:mm') }}</td>
                 <td style="width: 15%">
                 <a href="{{ url_for('todo.todo_undo',todo_id=todo['_id']) }}" class="btn btn-primary">Undo</a>
                 <a href="{{ url_for('todo.todo_delete',todo_id=todo['_id']) }}" class="btn btn-danger">Delete</a>
@@ -37,7 +37,7 @@
             <tr>
                 {% if todo['status'] == 1 %}
                 <td style="width: 15%"><del>{{ todo['content'] }}</del></td>
-                <td style="width: 15%"><del>{{ todo['create_time'] }}</del></td>
+                <td style="width: 15%"><del>{{ momentjs(todo['create_time']).format('YYYY-MM-DD HH:mm') }}</del></td>
                 <td style="width: 15%">
                 <a href="{{ url_for('todo.todo_done',todo_id=todo['_id']) }}" class="btn btn-success">Done</a>
                 <a href="{{ url_for('todo.todo_delete',todo_id=todo['_id']) }}" class="btn btn-danger">Delete</a>
