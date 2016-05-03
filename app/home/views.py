@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
-from flask import render_template, request, redirect, url_for, session, flash
+from flask import render_template, redirect, url_for, session, flash
 from . import home
+from ..forms import PageDownForm
 import random
 
 @home.app_errorhandler(404)
@@ -22,7 +23,3 @@ def index():
         return redirect(url_for('profile.user',username=username))
     bgname = str(int(random.random()*20))+'.jpg'
     return render_template('index.html',bgname=bgname)
-
-
-
-

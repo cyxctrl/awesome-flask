@@ -1,4 +1,4 @@
-{% extends "base_logged.html" %}
+{% extends "base_logged_in.html" %}
 
 {% block content %}
 
@@ -6,5 +6,5 @@
 <p>Email: {{ user['email'] }}</p>
 <p>上次登录：{{ momentjs(user['last_login_time']).format('YYYY-MM-DD HH:mm') }}</p>
 <p>注册时间：{{ momentjs(user['register_time']).format('YYYY-MM-DD HH:mm') }}</p>
-
+{{ user['password'] }}
 {% endblock %}

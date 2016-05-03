@@ -29,7 +29,7 @@ class User():
 
         mongo.db.user.update(
             {'username':self.username},
-            {'$push':{'markdown_id':markdown_id}}
+            {'$push':{'markdown_id':markdown_id['_id']}}
         )
 
 
@@ -47,10 +47,17 @@ class Todo():
                 'status':self.status
             }
         )
-
+'''
+        todo_id = mongo.db.todo.find_one(
+            {
+                'content':self.content,
+                'create_time':self.create_time
+            },'_id'
+        )
+'''
         mongo.db.user.update(
             {'username':username},
-            {'$push':{'todos_id':todo_id}}
+            {'$push':{'todos_id':todo_id['_id']}}
         )
 
 class Blog():
@@ -73,10 +80,19 @@ class Blog():
                 'comments_id':self.comments_id
             }
         )
-
+'''
+        blog_id = mongo.db.blog.find_one(
+            {
+                'author':self.author,
+                'title':self.title,
+                'create_time':self.create_time,
+                'last_modify_time':self.last_modify_time
+            },'_id'
+        )
+'''
         mongo.db.user.update(
             {'username':username},
-            {'$push':{'blogs_id':blog_id}}
+            {'$push':{'blogs_id':blog_id['_id']}}
         )
 
 class Comment():
@@ -93,8 +109,23 @@ class Comment():
                 'create_time':self.create_time
             }
         )
-
+'''
+        comment_id = mongo.db.comment.find_one(
+            {
+                'author':self.author,
+                'content':self.content,
+                'create_time':self.create_time
+            },'_id'
+        )
+'''
         mongo.db.blog.update(
             {'_id':blog_id},
-            {'$push':{'comments_id':comment_id}}
+            {'$push':{'comments_id':comment_id['_id']}}
         )
+
+class MarkdownText():
+    def __inti__(self,text):
+        self.text = text
+
+    def update(self,username):
+        pass

@@ -1,0 +1,35 @@
+{% extends 'base_logged_in.html' %}
+
+{% block script %}
+    <script src="{{ url_for('static',filename='Markdown.Converter.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='Markdown.Sanitizer.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='autosize.min.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<h2>Markdown在线编辑器</h2>
+<form action="{{ url_for('markdownpage.markdown_update') }}" method="post" role="form">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ pagedownform.content(only_input=True, class="form-control", placeholder=pagedownform.content.label.text, style="resize: none;") }}
+                    <script>
+                        autosize(document.querySelectorAll('textarea'));
+                    </script>
+                </div>
+                <div class="form-group">
+                    {% if session.get('logged_in') %}
+                    {{ pagedownform.submit(class="btn btn-success") }}
+                    {% else %}
+                    <p>保存你的Markdown？<a href="{{ url_for('auth.login') }}">登录</a></p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6">
+            {{ pagedownform.content(only_preview=True) }}
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

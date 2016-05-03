@@ -7,8 +7,7 @@ from .. import mongo
 def user(username):
     if username == session.get('user') and session.get('logged_in'):
         user = mongo.db.user.find_one({'username':username})
-        time = user['register_time']
-        return render_template('user.html',user=user,time=time)
+        return render_template('user.html',user=user)
     else:
         return redirect(url_for('home.index'))
 

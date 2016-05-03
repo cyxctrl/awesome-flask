@@ -2,6 +2,7 @@ from flask import flash
 from flask.ext.wtf import Form
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo, InputRequired
+from flask_pagedown.fields import PageDownField
 from . import mongo
 
 class LoginForm(Form):
@@ -50,4 +51,6 @@ class RegisterForm(Form):
         if mongo.db.user.find_one({'username':field.data}):
             flash(u'用户名已被使用。')
 
-
+class PageDownForm(Form):
+    content = PageDownField(u'Enjoy Markdown!')
+    submit = SubmitField(u'保存')

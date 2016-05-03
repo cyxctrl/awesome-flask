@@ -35,14 +35,15 @@ def login():
             user = mongo.db.user.find_one({'email':username_login})
         else:
             user = mongo.db.user.find_one({'username':username_login})
-        if user and check_password_hash(user['password'],password_login):
+        if user is not None and check_password_hash(user['password'],password_login):
             session['logged_in'] = True
             session['user']      = user['username']
             mongo.db.user.update(
                 {'username':user['username']},
                 {'$set':{'last_login_time':datetime.datetime.utcnow()}}
             )
-        return redirect(url_for('profile.user',username=user['username']))
+            return redirect(url_for('profile.user',username=user['username']))
+        flash('错误或不存在的邮箱、用户名和密码。')
     bgname = str(int(random.random()*20))+'.jpg'
     return render_template('login.html',loginform=loginform,bgname=bgname)
 
