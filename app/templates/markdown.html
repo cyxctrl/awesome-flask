@@ -7,7 +7,15 @@
 {% endblock %}
 
 {% block content %}
-<h2>Markdown在线编辑器</h2>
+<h2 class="text-center">原生Markdown在线编辑器</h2>
+<div class="row">
+    <div class="col-md-6">
+        <h3 class="text-center">编辑</h3>
+    </div>
+    <div class="col-md-6">
+        <h3 class="text-center">预览</h3>
+    </div>
+</div>
 <form action="{{ url_for('markdownpage.markdown_update') }}" method="post" role="form">
     <div class="form-group">
         <div class="row">
@@ -19,7 +27,7 @@
                     </script>
                 </div>
                 <div class="form-group">
-                    {% if session.get('logged_in') %}
+                    {% if current_user.is_authenticated %}
                     {{ pagedownform.submit(class="btn btn-success") }}
                     {% else %}
                     <p>保存你的Markdown？<a href="{{ url_for('auth.login') }}">登录</a></p>

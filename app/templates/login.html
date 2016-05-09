@@ -32,6 +32,12 @@
         {% else %}
             {{ loginform.password(class="form-control",placeholder=loginform.password.label.text) }}
         {% endif %}
+
+        <div class="checkbox">
+            <label>
+            {{ loginform.remember_me }} 记住我
+            </label>
+        </div>
     </div>
 
     <div class="form-group">

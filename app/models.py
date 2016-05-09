@@ -1,7 +1,9 @@
 #-*- coding: utf-8 -*-
 from app import mongo
+from flask.ext.login import UserMixin
+from . import login_manager
 
-class User():
+class User(UserMixin):
     def __init__(self,username,password,email,register_time,last_login_time,blogs_id=[],todos_id=[],markdown_id=[]):
         self.email           = email
         self.username        = username
@@ -11,6 +13,18 @@ class User():
         self.todos_id        = todos_id
         self.blogs_id        = blogs_id
         self.markdown_id     = markdown_id
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return self.username
 
     def save(self):
         mongo.db.user.insert(
@@ -32,6 +46,16 @@ class User():
             {'$push':{'markdown_id':markdown_id}}
         )
 
+@login_manager.user_loader
+def load_user(username):
+    user = mongo.db.user.find_one({"username": username})
+    if not user:
+        return None
+    return User(user['username'],
+                user['password'],
+                user['email'],
+                user['register_time'],
+                user['last_login_time'])
 
 class Todo():
     def __init__(self,content,create_time,status=0):

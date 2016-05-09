@@ -1,6 +1,6 @@
 from flask import flash
 from flask.ext.wtf import Form
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo, InputRequired
 from flask_pagedown.fields import PageDownField
 from . import mongo
@@ -13,6 +13,8 @@ class LoginForm(Form):
     password = PasswordField(u'密码',validators=[
         DataRequired(message=u'必填字段')
         ])
+
+    remember_me = BooleanField(u'记住我')
 
     submit = SubmitField(u'登录')
 

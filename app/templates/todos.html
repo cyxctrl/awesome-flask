@@ -1,7 +1,7 @@
 {% extends 'base_logged_in.html' %}
 {% block content %}
 
-<h1 class="text-center text-danger">{{ session.get('user') }} TODO List</h1>
+<h1 class="text-center text-danger">{{ current_user.username }}的待办事项</h1>
 
 <form class="input-group" action="{{ url_for('todo.todo_add') }}" method="post">
     <input class="form-control" name="content" type="text" value="" maxlength="100" required="required" placeholder="最多输入100个字符哦">
@@ -15,9 +15,9 @@
     <table class="table table-bordered table-hover">
         <thead>
             <tr>
-                <td>Contents</td>
-                <td>Time</td>
-                <td>Status</td>
+                <td>内容</td>
+                <td>时间</td>
+                <td>状态</td>
             </tr>
         </thead>
         <tbody>
@@ -27,8 +27,8 @@
                 <td style="width: 15%">{{ todo['content'] }}</td>
                 <td style="width: 15%">{{ momentjs(todo['create_time']).format('YYYY-MM-DD HH:mm') }}</td>
                 <td style="width: 15%">
-                <a href="{{ url_for('todo.todo_undo',todo_id=todo['_id']) }}" class="btn btn-primary">Undo</a>
-                <a href="{{ url_for('todo.todo_delete',todo_id=todo['_id']) }}" class="btn btn-danger">Delete</a>
+                <a href="{{ url_for('todo.todo_undo',todo_id=todo['_id']) }}" class="btn btn-primary">还没做</a>
+                <a href="{{ url_for('todo.todo_delete',todo_id=todo['_id']) }}" class="btn btn-danger">删除</a>
                 </td>
                 {% endif %}
             </tr>
@@ -39,8 +39,8 @@
                 <td style="width: 15%"><del>{{ todo['content'] }}</del></td>
                 <td style="width: 15%"><del>{{ momentjs(todo['create_time']).format('YYYY-MM-DD HH:mm') }}</del></td>
                 <td style="width: 15%">
-                <a href="{{ url_for('todo.todo_done',todo_id=todo['_id']) }}" class="btn btn-success">Done</a>
-                <a href="{{ url_for('todo.todo_delete',todo_id=todo['_id']) }}" class="btn btn-danger">Delete</a>
+                <a href="{{ url_for('todo.todo_done',todo_id=todo['_id']) }}" class="btn btn-success">已做完</a>
+                <a href="{{ url_for('todo.todo_delete',todo_id=todo['_id']) }}" class="btn btn-danger">删除</a>
                 </td>
                 {% endif %}
             </tr>
@@ -49,7 +49,7 @@
     </table>
 </div>
 {% else %}
-<h3 class="text-info">No todos, please add.</h3>
+<h3 class="text-info">还没有代办事项，请添加。</h3>
 {% endif %}
 
 {% endblock %}

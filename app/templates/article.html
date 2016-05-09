@@ -17,16 +17,16 @@
             <p>{{ comment['author'] }}</p>
             <p>{{ momentjs(comment['create_time']).format('YYYY-MM-DD HH:mm') }}</p>
             <p>{{ comment['content']|safe }}</p>
-            {% if session.get('logged_in') and session.get('user') == blog['author'] %}
+            {% if current_user.is_authenticated and current_user.username == blog['author'] %}
             <a href="{{ url_for('blog.blog_del_comment',blog_id=blog['_id'],comment_id=comment['_id']) }}" class="btn btn-danger">Delete</a>
-            {% elif session.get('logged_in') and session.get('user') == comment['author'] %}
+            {% elif current_user.is_authenticated and current_user.username == comment['author'] %}
             <a href="{{ url_for('blog.blog_del_comment',blog_id=blog['_id'],comment_id=comment['_id']) }}" class="btn btn-danger">Delete</a>
             {% endif %}
         </div>
         {% endfor %}
     {% endif %}
 
-    {% if session.get('logged_in') %}
+    {% if current_user.is_authenticated %}
     <h3>添加评论</h3>
     <form action="{{ url_for('blog.blog_add_comment',blog_id=blog['_id']) }}" method="post">
         <textarea name="content" id="editor" class="ckeditor" rows="100" cols="80">
@@ -38,7 +38,7 @@
     {% endif %}
 
 
-    {% if session.get('logged_in') and blog['author'] == session.get('user') %}
+    {% if current_user.is_authenticated and current_user.username == blog['author'] %}
         <p class="text-right"><a href="{{ url_for('blog.editor_modify',blog_id=blog['_id']) }}">编辑文章</a> </p>
     {% endif %}
 

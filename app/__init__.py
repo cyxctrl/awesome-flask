@@ -1,13 +1,18 @@
 #-*- coding: utf-8 -*-
 from flask import Flask
 from flask.ext.pymongo import PyMongo
-from flask.ext.moment import Moment
 from config import config
 from .momentjs import momentjs
 from flask_pagedown import PageDown
+from flask.ext.login import LoginManager
 
 mongo = PyMongo()
 pagedown = PageDown()
+login_manager = LoginManager()
+login_manager.session_protection = 'strong'
+login_manager.login_view = 'auth.login'
+login_manager.login_message = u'请登陆后再操作。'
+login_manager.remember_cookie_name = u'remember_me_token'
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -18,6 +23,8 @@ def create_app(config_name):
 
     mongo.init_app(app)
     pagedown.init_app(app)
+    login_manager.init_app(app)
+
 
     from .home import home as main_blueprint
     from .auth import auth as auth_blueprint

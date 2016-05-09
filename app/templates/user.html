@@ -1,10 +1,10 @@
 {% extends "base_logged_in.html" %}
 
 {% block content %}
-
-<h1>Hello, {{ user['username'] }}</h1>
-<p>Email: {{ user['email'] }}</p>
-<p>上次登录：{{ momentjs(user['last_login_time']).format('YYYY-MM-DD HH:mm') }}</p>
-<p>注册时间：{{ momentjs(user['register_time']).format('YYYY-MM-DD HH:mm') }}</p>
-{{ user['password'] }}
+{% if current_user.is_authenticated %}
+    <p>{{ current_user.username }}</p>
+    <p>{{ current_user.email }}</p>
+    <p>{{ momentjs(current_user.last_login_time).format('YYYY-MM-DD HH:mm') }}</p>
+    <p>{{ momentjs(current_user.register_time).format('YYYY-MM-DD HH:mm') }}</p>
+{% endif %}
 {% endblock %}
