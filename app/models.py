@@ -104,12 +104,13 @@ class Todo():
         )
 
 class Blog():
-    def __init__(self,author,title,create_time,last_modify_time,article,comments_id=[]):
+    def __init__(self,author,title,create_time,last_modify_time,article,permission,comments_id=[]):
         self.author           = author
         self.title            = title
         self.create_time      = create_time
         self.last_modify_time = last_modify_time
         self.article          = article
+        self.permission = permission
         self.comments_id      = comments_id
 
     def save(self,username):
@@ -118,6 +119,7 @@ class Blog():
                 'author':self.author,
                 'title':self.title,
                 'article':self.article,
+                'permission':self.permission,
                 'create_time':self.create_time,
                 'last_modify_time':self.last_modify_time,
                 'comments_id':self.comments_id

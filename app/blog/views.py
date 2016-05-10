@@ -3,6 +3,7 @@ from flask import render_template, request, redirect, url_for, session, flash
 from . import blog
 from .. import mongo
 from ..models import Blog, Comment
+from ..forms import ArticleForm
 import bson
 import datetime
 from flask.ext.login import login_required, current_user
@@ -34,10 +35,10 @@ def blogs():
         blog_list = blog_list[::-1]
     )
 
-
 @blog.route('/article_editor')
 @login_required
 def editor_add():
+    form = ArticleForm()
     return render_template('article_editor.html')
 
 @blog.route('/blogs/add',methods=['POST'])
@@ -45,10 +46,11 @@ def editor_add():
 def blog_add():
     username = current_user.username
     blog     = Blog(
-        author           = username,
-        title            = request.form['title'],
-        article          = request.form['article'],
-        create_time      = datetime.datetime.utcnow(),
+        author = username,
+        title = request.form['title'],
+        article = request.form['article'],
+        permission = request.form['permission'],
+        create_time = datetime.datetime.utcnow(),
         last_modify_time = datetime.datetime.utcnow()
     )
     blog.save(username)
@@ -70,6 +72,7 @@ def blog_modify(blog_id):
     username         = current_user.username
     title            = request.form['title']
     article          = request.form['article']
+    permission = request.form['permission']
     last_modify_time = datetime.datetime.utcnow()
     mongo.db.blog.update(
         {'_id':bson.ObjectId(blog_id)},
@@ -77,6 +80,7 @@ def blog_modify(blog_id):
                 {
                     'title':title,
                     'article':article,
+                    'permission':permission,
                     'last_modify_time':last_modify_time
                 }
         }

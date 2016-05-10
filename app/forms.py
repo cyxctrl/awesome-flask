@@ -82,3 +82,8 @@ class EditPasswordForm(Form):
         ])
 
     submit = SubmitField(u'修改密码')
+
+class ArticleForm(Form):
+    title = StringField(u'标题',validators=[
+        DataRequired(message=u'必填字段')])
+    content = TextAreaField(u'文章内容')

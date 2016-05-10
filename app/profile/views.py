@@ -45,7 +45,7 @@ def unfollow(username):
 @login_required
 def edit_profile():
     form = EditProfileForm()
-    if form.validate_on_submit():
+    if request.method == 'POST' and form.validate_on_submit():
         mongo.db.user.update(
             {'username':current_user.username},
             {'$set':
@@ -68,7 +68,7 @@ def edit_profile():
 @login_required
 def edit_password():
     form = EditPasswordForm()
-    if form.validate_on_submit():
+    if request.method == 'POST' and form.validate_on_submit():
         user = mongo.db.user.find_one({'username':current_user.username})
         if check_password_hash(user['password'],form.old_password.data):
             mongo.db.user.update(

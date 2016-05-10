@@ -12,7 +12,7 @@ from flask.ext.login import login_user, logout_user
 @auth.route('/register',methods=['GET','POST'])
 def register():
     form = RegisterForm()
-    if form.validate_on_submit():
+    if request.method == 'POST' and form.validate_on_submit():
         if mongo.db.user.find_one({'email':form.email.data}):
             flash(u'邮箱已被注册。')
             return redirect(url_for('auth.register'))
@@ -40,7 +40,7 @@ def register():
 @auth.route('/login',methods=['GET','POST'])
 def login():
     form = LoginForm()
-    if form.validate_on_submit():
+    if request.method == 'POST' and form.validate_on_submit():
         username_login = form.username.data
         password_login = form.password.data
         if '@' in username_login:
