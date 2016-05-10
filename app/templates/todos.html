@@ -6,7 +6,7 @@
 <form class="input-group" action="{{ url_for('todo.todo_add') }}" method="post">
     <input class="form-control" name="content" type="text" value="" maxlength="100" required="required" placeholder="最多输入100个字符哦">
     <span class="input-group-btn">
-         <button class="btn btn-primary" type="submit">Add</button>
+         <button class="btn btn-primary" type="submit">增加</button>
     </span>
 </form>
 
@@ -49,7 +49,7 @@
     </table>
 </div>
 {% else %}
-<h3 class="text-info">还没有代办事项，请添加。</h3>
+<h3 class="text-info">还没有待办事项，请添加。</h3>
 {% endif %}
 
 {% endblock %}

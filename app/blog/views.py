@@ -35,10 +35,10 @@ def blogs():
     )
 
 
-@blog.route('/editor')
+@blog.route('/article_editor')
 @login_required
 def editor_add():
-    return render_template('editor.html')
+    return render_template('article_editor.html')
 
 @blog.route('/blogs/add',methods=['POST'])
 @login_required
@@ -60,7 +60,7 @@ def editor_modify(blog_id):
     username = current_user.username
     blog = mongo.db.blog.find_one({'_id':bson.ObjectId(blog_id)})
     return render_template(
-        'editor.html',
+        'article_editor.html',
         blog = blog
     )
 

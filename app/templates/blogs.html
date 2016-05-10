@@ -36,6 +36,6 @@
 {% else %}
 <h3 class="text-info">还没有文章，请添加。</h3>
 {% endif %}
-<p><a href="{{ url_for('blog.editor_add',username=session.get('user')) }}">+ 增加文章 +</a></p>
+<p><a href="{{ url_for('blog.editor_add') }}">+ 增加文章 +</a></p>
 
 {% endblock %}

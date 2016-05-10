@@ -3,7 +3,7 @@ from flask import request, render_template, flash, redirect, session, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import auth
 from .. import mongo
-from ..models import User
+from ..models import User, CurrentUser
 from ..forms import LoginForm, RegisterForm
 import datetime
 import random
@@ -21,6 +21,11 @@ def register():
             last_login_time = datetime.datetime.utcnow()
         )
         user.save()
+        if user.username == 'admin':
+            mongo.db.user.update(
+                {'username':user.username},
+                {'$set':{'permission':9}}
+                )
         flash('注册成功！')
         return redirect(url_for('auth.login'))
     bgname = str(int(random.random()*20))+'.jpg'
@@ -37,16 +42,20 @@ def login():
         else:
             user = mongo.db.user.find_one({'username':username_login})
         if user is not None and check_password_hash(user['password'],password_login):
-            user_obj = User(user['username'],
-                            user['password'],
-                            user['email'],
-                            user['register_time'],
-                            user['last_login_time'])
-            login_user(user_obj,loginform.remember_me.data)
+            user_obj = CurrentUser(
+                                username    = user['username'],
+                                email       = user['email'],
+                                permission  = user['permission'],
+                                blogs_id    = user['blogs_id'],
+                                todos_id    = user['todos_id'],
+                                markdown_id = user['markdown_id'],
+                                following   = user['following']
+                                )
             mongo.db.user.update(
-                {'username':user['username']},
+                {'username':user_obj.username},
                 {'$set':{'last_login_time':datetime.datetime.utcnow()}}
             )
+            login_user(user_obj,loginform.remember_me.data)
             return redirect(request.args.get('next') or url_for('profile.user',username=user['username']))
         flash('错误或不存在的邮箱、用户名和密码。')
     bgname = str(int(random.random()*20))+'.jpg'

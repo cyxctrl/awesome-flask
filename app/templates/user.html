@@ -1,10 +1,39 @@
 {% extends "base_logged_in.html" %}
 
 {% block content %}
-{% if current_user.is_authenticated %}
-    <p>{{ current_user.username }}</p>
-    <p>{{ current_user.email }}</p>
-    <p>{{ momentjs(current_user.last_login_time).format('YYYY-MM-DD HH:mm') }}</p>
-    <p>{{ momentjs(current_user.register_time).format('YYYY-MM-DD HH:mm') }}</p>
+
+{% if current_user.username == user['username'] %}
+    {{ current_user.__dict__ }}
+    <p>hi, {{ user.username }}</p>
+    <p>注册邮箱 {{ user.email }}</p>
+    <p>上次登录时间 {{ momentjs(user.last_login_time).format('YYYY-MM-DD HH:mm') }}</p>
+    <p>注册时间 {{ momentjs(user.register_time).format('YYYY-MM-DD HH:mm') }}</p>
+    <p>权限
+        {% if user.permission == 5 %}<span class="text-info">普通用户</span>{% endif %}
+        {% if user.permission == 9 %}<span class="text-danger">管理员</span>{% endif %}
+    </p>
+    {% if user.location %}
+        <p>位置 <a href="http://ditu.amap.com/search?query={{ user.location }}" target="_blank">{{ user.location }}</a></p>
+    {% endif %}
+    <p>个人简介 {{ user.about_me }}</p>
+    {% if user.following[0] %}
+    <p>正在关注：</p>
+    {% for u in user.following %}
+    <a href="{{ url_for('profile.user',username=u) }}">{{ u }}</a><a href="{{ url_for('profile.unfollow',username=u) }}" class="btn btn-default">取消关注</a><br />
+    {% endfor %}
+    {% else %}
+    <p>还没有关注。</p>
+    {% endif %}
+{% else %}
+    {% if user['username'] in current_user.following %}
+    <a href="{{ url_for('profile.unfollow',username=user['username']) }}" class="btn btn-default">取消关注</a>
+    {% else %}
+    <a href="{{ url_for('profile.follow',username=user['username']) }}" class="btn btn-success">关注</a>
+    {% endif %}
+    <p>{{ user['username'] }}</p>
+    <p>个人简介 {{ user.about_me }}</p>
+    {% if user.location %}
+        <p>位置 <a href="http://ditu.amap.com/search?query={{ user.location }}" target="_blank">{{ user.location }}</a></p>
+    {% endif %}
 {% endif %}
 {% endblock %}

@@ -1,18 +1,60 @@
 #-*- coding: utf-8 -*-
 from app import mongo
+import datetime
 from flask.ext.login import UserMixin
 from . import login_manager
 
-class User(UserMixin):
-    def __init__(self,username,password,email,register_time,last_login_time,blogs_id=[],todos_id=[],markdown_id=[]):
+class User():
+    def __init__(self,username,password,email,register_time,last_login_time,
+                permission=5,location='',about_me='这个人比较懒，还没有填写个人简介。',
+                blogs_id=[],todos_id=[],markdown_id=[],following=[]):
         self.email           = email
         self.username        = username
         self.password        = password
         self.register_time   = register_time
         self.last_login_time = last_login_time
+        self.permission      = permission
+        self.location        = location
+        self.about_me        = about_me
         self.todos_id        = todos_id
         self.blogs_id        = blogs_id
         self.markdown_id     = markdown_id
+        self.following       = following
+
+    def save(self):
+        mongo.db.user.insert(
+            {
+                'email':self.email,
+                'username':self.username,
+                'password':self.password,
+                'todos_id':self.todos_id,
+                'blogs_id':self.blogs_id,
+                'markdown_id':self.markdown_id,
+                'register_time':self.register_time,
+                'last_login_time':self.last_login_time,
+                'permission':self.permission,
+                'location':self.location,
+                'about_me':self.about_me,
+                'following':self.following
+            }
+        )
+
+        markdown_id = mongo.db.markdown.save({'text':''})
+
+        mongo.db.user.update(
+            {'username':self.username},
+            {'$push':{'markdown_id':markdown_id}}
+        )
+
+class CurrentUser(UserMixin):
+    def __init__(self,username,email,permission,blogs_id,todos_id,markdown_id,following):
+        self.email       = email
+        self.username    = username
+        self.permission  = permission
+        self.todos_id    = todos_id
+        self.blogs_id    = blogs_id
+        self.markdown_id = markdown_id
+        self.following   = following
 
     def is_authenticated(self):
         return True
@@ -26,36 +68,20 @@ class User(UserMixin):
     def get_id(self):
         return self.username
 
-    def save(self):
-        mongo.db.user.insert(
-            {
-                'email':self.email,
-                'username':self.username,
-                'password':self.password,
-                'todos_id':self.todos_id,
-                'blogs_id':self.blogs_id,
-                'register_time':self.register_time,
-                'last_login_time':self.last_login_time
-            }
-        )
-
-        markdown_id = mongo.db.markdown.save({'text':''})
-
-        mongo.db.user.update(
-            {'username':self.username},
-            {'$push':{'markdown_id':markdown_id}}
-        )
-
 @login_manager.user_loader
 def load_user(username):
     user = mongo.db.user.find_one({"username": username})
     if not user:
         return None
-    return User(user['username'],
-                user['password'],
-                user['email'],
-                user['register_time'],
-                user['last_login_time'])
+    return CurrentUser(
+                username    = user['username'],
+                email       = user['email'],
+                permission  = user['permission'],
+                blogs_id    = user['blogs_id'],
+                todos_id    = user['todos_id'],
+                markdown_id = user['markdown_id'],
+                following   = user['following']
+                )
 
 class Todo():
     def __init__(self,content,create_time,status=0):

@@ -13,13 +13,9 @@ def page_not_found(e):
 def internal_server_error(e):
     return render_template('500.html'), 500
 
-@home.route('/test')
-def test():
-    return render_template('editor.html')
-
 @home.route('/')
 def index():
     if current_user.is_authenticated:
-        return render_template('user.html')
+        return redirect(url_for('profile.user',username=current_user.username))
     bgname = str(int(random.random()*20))+'.jpg'
     return render_template('index.html',bgname=bgname)
