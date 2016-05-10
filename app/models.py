@@ -6,7 +6,7 @@ from . import login_manager
 
 class User():
     def __init__(self,username,password,email,register_time,last_login_time,
-                permission=5,location='',about_me='这个人比较懒，还没有填写个人简介。',
+                permission=5,location='',about_me=u'这个人比较懒，还没有填写个人简介。',
                 blogs_id=[],todos_id=[],markdown_id=[],following=[]):
         self.email           = email
         self.username        = username

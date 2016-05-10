@@ -1,6 +1,6 @@
 from flask import flash
 from flask.ext.wtf import Form
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo, InputRequired
 from flask_pagedown.fields import PageDownField
 from . import mongo
@@ -45,14 +45,40 @@ class RegisterForm(Form):
 
     submit = SubmitField(u'注册')
 
-    def validate_email(self,field):
-        if mongo.db.user.find_one({'email':field.data}):
-            flash(u'邮箱已被注册。')
-
-    def validate_username(self,field):
-        if mongo.db.user.find_one({'username':field.data}):
-            flash(u'用户名已被使用。')
-
 class PageDownForm(Form):
     content = PageDownField(u'Enjoy Markdown!')
     submit = SubmitField(u'保存')
+
+class EditProfileForm(Form):
+    email = StringField(u'邮箱',validators=[
+        DataRequired(message=u'必填字段')
+        ])
+
+    username = StringField(u'用户名', validators=[
+        DataRequired(message=u'必填字段')
+        ])
+
+    location = StringField(u'位置', validators=[
+        Length(0, 64)
+        ])
+
+    about_me = TextAreaField(u'个人简介')
+
+    submit = SubmitField(u'提交')
+
+class EditPasswordForm(Form):
+    old_password = PasswordField(u'旧密码',validators=[
+        DataRequired(message=u'必填字段')
+        ])
+
+    new_password = PasswordField(u'密码',validators=[
+        DataRequired(message=u'必填字段'),
+        Length(min=6,message=u'密码的最小长度为6个字符'),
+        EqualTo('new_password2',message=u'两次输入的密码不一致')
+        ])
+
+    new_password2 = PasswordField(u'确认新密码',validators=[
+        DataRequired(message=u'必填字段')
+        ])
+
+    submit = SubmitField(u'修改密码')

@@ -3,45 +3,49 @@
 {% block content %}
 <form role="form" action="{{ url_for('auth.login') }}" method="post">
     <div class="form-group">
-        {{ loginform.hidden_tag() }}
+        {{ form.hidden_tag() }}
     </div>
 
     <div class="form-group">
-        {% if loginform.username.errors %}
+        {% if form.username.errors %}
         <div class="has-error">
-            {{ loginform.username(class="form-control",placeholder=loginform.username.label.text) }}
+            {{ form.username(class="form-control",placeholder=form.username.label.text) }}
             <dl>
-                {% for error in loginform.username.errors %}
+                {% for error in form.username.errors %}
                 <dd class="text-danger">{{ error }}</dd>
                 {% endfor %}
             </dl>
          </div>
         {% else %}
-            {{ loginform.username(class="form-control",placeholder=loginform.username.label.text) }}
+        <div>
+            {{ form.username(class="form-control",placeholder=form.username.label.text) }}
+        </div>
         {% endif %}
 
-        {% if loginform.password.errors %}
+        {% if form.password.errors %}
         <div class="has-error">
-            {{ loginform.password(class="form-control",placeholder=loginform.password.label.text) }}
-            {% for error in loginform.password.errors %}
+            {{ form.password(class="form-control",placeholder=form.password.label.text) }}
+            {% for error in form.password.errors %}
             <dl>
                 <dd class="text-danger">{{ error }}</dd>
             </dl>
             {% endfor %}
          </div>
         {% else %}
-            {{ loginform.password(class="form-control",placeholder=loginform.password.label.text) }}
+        <div>
+            {{ form.password(class="form-control",placeholder=form.password.label.text) }}
+        </div>
         {% endif %}
 
         <div class="checkbox">
             <label>
-            {{ loginform.remember_me }} 记住我
+            {{ form.remember_me }} 记住我
             </label>
         </div>
     </div>
 
     <div class="form-group">
-        {{ loginform.submit(class="btn btn-primary", style="width: 100%") }}
+        {{ form.submit(class="btn btn-primary form-control") }}
     </div>
 
     <div class="form-group">

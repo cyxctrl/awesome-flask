@@ -40,9 +40,10 @@
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ current_user.username }}</a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ current_user.username }} <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">修改资料</a></li>
+                            <li><a href="{{ url_for('profile.edit_profile') }}">修改资料</a></li>
+                            <li><a href="{{ url_for('profile.edit_password') }}">修改密码</a></li>
                             <li><a href="{{ url_for('auth.logout') }}">登出账户</a></li>
                         </ul>
                     </li>
@@ -58,7 +59,7 @@
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for message in messages %}
-                <div class="alert" role="alert">
+                <div class="alert alert-danger" role="alert">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                     {{ message }}
                 </div>

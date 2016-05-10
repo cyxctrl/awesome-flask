@@ -3,65 +3,74 @@
 {% block content %}
 <form role="form" action="{{ url_for('auth.register') }}" method="post">
     <div class="form-group">
-        {{ registerform.hidden_tag() }}
+        {{ form.hidden_tag() }}
     </div>
 
     <div class="form-group">
-        {% if registerform.email.errors %}
+        {% if form.email.errors %}
         <div class="has-error">
-            {{ registerform.email(class="form-control",placeholder=registerform.email.label.text) }}
+            {{ form.email(class="form-control",placeholder=form.email.label.text) }}
             <dl>
-                {% for error in registerform.email.errors %}
+                {% for error in form.email.errors %}
                 <dd class="text-danger">{{ error }}</dd>
                 {% endfor %}
             </dl>
          </div>
         {% else %}
-            {{ registerform.email(class="form-control",placeholder=registerform.email.label.text) }}
+        <div>
+            {{ form.email(class="form-control",placeholder=form.email.label.text) }}
+        </div>
         {% endif %}
 
-        {% if registerform.username.errors %}
+
+        {% if form.username.errors %}
         <div class="has-error">
-            {{ registerform.username(class="form-control",placeholder=registerform.username.label.text) }}
+            {{ form.username(class="form-control",placeholder=form.username.label.text) }}
             <dl>
-                {% for error in registerform.username.errors %}
+                {% for error in form.username.errors %}
                 <dd class="text-danger">{{ error }}</dd>
                 {% endfor %}
             </dl>
          </div>
         {% else %}
-            {{ registerform.username(class="form-control",placeholder=registerform.username.label.text) }}
+        <div>
+            {{ form.username(class="form-control",placeholder=form.username.label.text) }}
+        </div>
         {% endif %}
 
-        {% if registerform.password.errors %}
+        {% if form.password.errors %}
         <div class="has-error">
-            {{ registerform.password(class="form-control",placeholder=registerform.password.label.text) }}
+            {{ form.password(class="form-control",placeholder=form.password.label.text) }}
             <dl>
-                {% for error in registerform.password.errors %}
+                {% for error in form.password.errors %}
                 <dd class="text-danger">{{ error }}</dd>
                 {% endfor %}
             </dl>
          </div>
         {% else %}
-            {{ registerform.password(class="form-control",placeholder=registerform.password.label.text) }}
+        <div>
+            {{ form.password(class="form-control",placeholder=form.password.label.text) }}
+        </div>
         {% endif %}
 
-        {% if registerform.password2.errors %}
+        {% if form.password2.errors %}
         <div class="has-error">
-            {{ registerform.password2(class="form-control",placeholder=registerform.password2.label.text) }}
+            {{ form.password2(class="form-control",placeholder=form.password2.label.text) }}
             <dl>
-                {% for error in registerform.password2.errors %}
+                {% for error in form.password2.errors %}
                 <dd class="text-danger">{{ error }}</dd>
                 {% endfor %}
             </dl>
          </div>
         {% else %}
-            {{ registerform.password2(class="form-control",placeholder=registerform.password2.label.text) }}
+        <div>
+            {{ form.password2(class="form-control",placeholder=form.password2.label.text) }}
+        </div>
         {% endif %}
     </div>
 
     <div class="form-group">
-        {{ registerform.submit(class="btn btn-primary", style="width: 100%") }}
+        {{ form.submit(class="btn btn-primary form-control") }}
     </div>
 
     <div class="form-group">
