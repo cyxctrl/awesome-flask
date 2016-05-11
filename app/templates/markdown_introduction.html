@@ -7,8 +7,7 @@
 {% endblock %}
 
 {% block content %}
-<h2>原生Markdown在线编辑器</h2>
-<p><a href="{{ url_for('markdownpage.markdown_introduction') }}" target="_blank">Markdown简明使用指南</a></p>
+<h2>Markdown简明使用指南</h2>
 <div class="row">
     <div class="col-md-6">
         <h3 class="text-center">编辑</h3>
@@ -26,13 +25,6 @@
                     <script>
                         autosize(document.querySelectorAll('textarea'));
                     </script>
-                </div>
-                <div class="form-group">
-                    {% if current_user.is_authenticated %}
-                    {{ form.submit(class="btn btn-success") }}
-                    {% else %}
-                    <p>保存你的Markdown？<a href="{{ url_for('auth.login') }}">登录</a></p>
-                    {% endif %}
                 </div>
             </div>
             <div class="col-md-6">
