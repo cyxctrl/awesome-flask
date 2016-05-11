@@ -35,36 +35,51 @@ def blogs():
         blog_list = blog_list[::-1]
     )
 
-@blog.route('/article_editor')
+@blog.route('/article-add',methods=['GET','POST'])
 @login_required
-def editor_add():
+def article_add():
     form = ArticleForm()
-    return render_template('article_editor.html')
+    if request.method == 'POST' and form.validate_on_submit():
+        username = current_user.username
+        blog = Blog(
+            author = username,
+            title = form.title.data,
+            article = request.form['article'],
+            permission = form.permission.data,
+            create_time = datetime.datetime.utcnow(),
+            last_modify_time = datetime.datetime.utcnow()
+        )
+        blog_id = blog.save(username)
+        return redirect(url_for('.article',blog_id=blog_id))
+    form.submit.label.text = u'增加'
+    return render_template('article_edit.html',form=form)
 
-@blog.route('/blogs/add',methods=['POST'])
+@blog.route('/article-modify/<string:blog_id>',methods=['GET','POST'])
 @login_required
-def blog_add():
-    username = current_user.username
-    blog     = Blog(
-        author = username,
-        title = request.form['title'],
-        article = request.form['article'],
-        permission = request.form['permission'],
-        create_time = datetime.datetime.utcnow(),
+def article_modify(blog_id):
+    form = ArticleForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        username = current_user.username
+        title = form.title.data
+        article = request.form['article']
+        permission = form.permission.data
         last_modify_time = datetime.datetime.utcnow()
-    )
-    blog.save(username)
-    return redirect(url_for('.blogs'))
-
-@blog.route('/editor/<string:blog_id>')
-@login_required
-def editor_modify(blog_id):
-    username = current_user.username
+        mongo.db.blog.update(
+            {'_id':bson.ObjectId(blog_id)},
+            {'$set':
+                {
+                    'title':title,
+                    'article':article,
+                    'permission':permission,
+                    'last_modify_time':last_modify_time
+                }
+            }
+        )
+        return redirect(url_for('.article',blog_id=blog_id))
     blog = mongo.db.blog.find_one({'_id':bson.ObjectId(blog_id)})
-    return render_template(
-        'article_editor.html',
-        blog = blog
-    )
+    form.title.data = blog['title']
+    form.submit.label.text = u'修改'
+    return render_template('article_edit.html',form=form,blog=blog)
 
 @blog.route('/blogs/modify/<string:blog_id>',methods=['POST'])
 @login_required
@@ -77,12 +92,12 @@ def blog_modify(blog_id):
     mongo.db.blog.update(
         {'_id':bson.ObjectId(blog_id)},
         {'$set':
-                {
-                    'title':title,
-                    'article':article,
-                    'permission':permission,
-                    'last_modify_time':last_modify_time
-                }
+            {
+                'title':title,
+                'article':article,
+                'permission':permission,
+                'last_modify_time':last_modify_time
+            }
         }
     )
     return redirect(url_for('.blogs',username=username))

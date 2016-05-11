@@ -6,20 +6,21 @@ from . import login_manager
 
 class User():
     def __init__(self,username,password,email,register_time,last_login_time,
-                permission=5,location='',about_me=u'这个人比较懒，还没有填写个人简介。',
-                blogs_id=[],todos_id=[],markdown_id=[],following=[]):
-        self.email           = email
-        self.username        = username
-        self.password        = password
-        self.register_time   = register_time
+                permission=5,location='',about_me=u'这个人很懒，什么都没有写',
+                blogs_id=[],todos_id=[],markdown_id=[],following=[],password_questions=[{},{}]):
+        self.email = email
+        self.username = username
+        self.password = password
+        self.register_time = register_time
         self.last_login_time = last_login_time
-        self.permission      = permission
-        self.location        = location
-        self.about_me        = about_me
-        self.todos_id        = todos_id
-        self.blogs_id        = blogs_id
-        self.markdown_id     = markdown_id
-        self.following       = following
+        self.permission = permission
+        self.location = location
+        self.about_me = about_me
+        self.todos_id = todos_id
+        self.blogs_id = blogs_id
+        self.markdown_id = markdown_id
+        self.following = following
+        self.password_questions = password_questions
 
     def save(self):
         mongo.db.user.insert(
@@ -32,6 +33,7 @@ class User():
                 'markdown_id':self.markdown_id,
                 'register_time':self.register_time,
                 'last_login_time':self.last_login_time,
+                'password_questions':self.password_questions,
                 'permission':self.permission,
                 'location':self.location,
                 'about_me':self.about_me,
@@ -40,7 +42,6 @@ class User():
         )
 
         markdown_id = mongo.db.markdown.save({'text':''})
-
         mongo.db.user.update(
             {'username':self.username},
             {'$push':{'markdown_id':markdown_id}}
@@ -130,6 +131,8 @@ class Blog():
             {'username':username},
             {'$push':{'blogs_id':blog_id}}
         )
+
+        return blog_id
 
 class Comment():
     def __init__(self,author,content,create_time):

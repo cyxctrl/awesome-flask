@@ -22,5 +22,5 @@ def markdown_update():
         text = form.content.data
         mongo.db.markdown.update({'_id':markdown_id},{'text':text})
     else:
-        flash('请登录先！')
+        flash('请先登录！')
     return redirect(url_for('markdownpage.markdown'))

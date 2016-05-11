@@ -1,7 +1,7 @@
 {% extends "base_logged_in.html" %}
 
 {% block script %}
-    <script src="//cdn.ckeditor.com/4.5.8/basic/ckeditor.js"></script>
+    <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -19,7 +19,7 @@
         <h2>Reviews</h2>
         {% for comment in comment_list %}
         <div>
-            <p>{{ comment['author'] }}</p>
+            <p><a href="{{ url_for('profile.user',username=comment['author']) }}" target="_blank">{{ comment['author'] }}</a></p>
             <p>{{ momentjs(comment['create_time']).format('YYYY-MM-DD HH:mm') }}</p>
             <p>{{ comment['content']|safe }}</p>
             {% if current_user.is_authenticated and current_user.username == blog['author'] %}
@@ -44,7 +44,7 @@
 
 
     {% if current_user.is_authenticated and current_user.username == blog['author'] %}
-        <p class="text-right"><a href="{{ url_for('blog.editor_modify',blog_id=blog['_id']) }}">编辑文章</a> </p>
+        <p class="text-right"><a href="{{ url_for('blog.article_modify',blog_id=blog['_id']) }}">编辑文章</a> </p>
     {% endif %}
 
 {% elif blog['author'] == current_user.username %}
@@ -60,7 +60,7 @@
         <h2>Reviews</h2>
         {% for comment in comment_list %}
         <div>
-            <p>{{ comment['author'] }}</p>
+            <p><a href="{{ url_for('profile.user',username=comment['author']) }}" target="_blank">{{ comment['author'] }}</a></p>
             <p>{{ momentjs(comment['create_time']).format('YYYY-MM-DD HH:mm') }}</p>
             <p>{{ comment['content']|safe }}</p>
             {% if current_user.is_authenticated and current_user.username == blog['author'] %}
@@ -85,10 +85,11 @@
 
 
     {% if current_user.is_authenticated and current_user.username == blog['author'] %}
-        <p class="text-right"><a href="{{ url_for('blog.editor_modify',blog_id=blog['_id']) }}">编辑文章</a> </p>
+        <p class="text-right"><a href="{{ url_for('blog.article_modify',blog_id=blog['_id']) }}">编辑文章</a> </p>
     {% endif %}
 
 {% else %}
     <h2>你无法查看这篇文章。</h2>
 {% endif %}
+
 {% endblock %}
