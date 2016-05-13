@@ -1,0 +1,57 @@
+{% extends 'base_logged_in.html' %}
+{% block content %}
+
+<h1 class="text-center text-danger">{{ current_user.username }}的待办事项</h1>
+
+
+<form class="input-group" action="{{ action }}" method="post">
+    {{ form.hidden_tag() }}
+    {{ form.content(class="form-control",placeholder=form.content.label.text) }}
+    <span class="input-group-btn">
+        {{ form.submit(class="btn btn-primary") }}
+    </span>
+</form>
+
+{% if todo_list[0] %}
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <td>内容</td>
+                <td>创建时间</td>
+                <td>状态</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for todo in todo_list %}
+            <tr>
+                {% if todo['status'] == 0 %}
+                <td style="width: 15%">{{ todo['content'] }}</td>
+                <td style="width: 15%">{{ momentjs(todo['create_time']).format('YYYY-MM-DD HH:mm') }}</td>
+                <td style="width: 15%">
+                <a href="{{ url_for('todo.todo_undo',todo_id=todo['_id']) }}" class="btn btn-primary">还没做</a>
+                <a href="{{ url_for('todo.todo_delete',todo_id=todo['_id']) }}" class="btn btn-danger">删除</a>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+            {% for todo in todo_list %}
+            <tr>
+                {% if todo['status'] == 1 %}
+                <td style="width: 15%"><del>{{ todo['content'] }}</del></td>
+                <td style="width: 15%"><del>{{ momentjs(todo['create_time']).format('YYYY-MM-DD HH:mm') }}</del></td>
+                <td style="width: 15%">
+                <a href="{{ url_for('todo.todo_done',todo_id=todo['_id']) }}" class="btn btn-success">已做完</a>
+                <a href="{{ url_for('todo.todo_delete',todo_id=todo['_id']) }}" class="btn btn-danger">删除</a>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<h3 class="text-info">还没有待办事项，请添加。</h3>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base_not_logged_in.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href={{ url_for('static',filename='css/mystyle.css') }}>
+{% endblock%}
+
+{% block content %}
+<div class="vertical-center" style="width: 50%">
+<form role="form" action="{{ url_for('auth.register') }}" method="post">
+    <div class="form-group">
+        {{ form.hidden_tag() }}
+    </div>
+
+    <div class="form-group">
+    {% if form.username.errors %}
+    <div class="has-error">
+        {{ form.username(class="form-control",placeholder=form.username.label.text) }}
+        <p class="text-danger">
+        {% for error in form.username.errors %}
+            {{ error }}
+        {% endfor %}
+        </p>
+    </div>
+    {% else %}
+    <div>
+        {{ form.username(class="form-control",placeholder=form.username.label.text) }}
+    </div>
+    {% endif %}
+
+    {% if form.email.errors %}
+    <div class="has-error">
+        {{ form.email(class="form-control",placeholder=form.email.label.text) }}
+        <p class="text-danger">
+        {% for error in form.email.errors %}
+            {{ error }}
+        {% endfor %}
+        </p>
+    </div>
+    {% else %}
+    <div>
+        {{ form.email(class="form-control",placeholder=form.email.label.text) }}
+    </div>
+    {% endif %}
+
+    {% if form.password.errors %}
+    <div class="has-error">
+        {{ form.password(class="form-control",placeholder=form.password.label.text) }}
+        <p class="text-danger">
+        {% for error in form.password.errors %}
+            {{ error }}
+        {% endfor %}
+        </p>
+    </div>
+    {% else %}
+    <div>
+        {{ form.password(class="form-control",placeholder=form.password.label.text) }}
+    </div>
+    {% endif %}
+
+    {% if form.password2.errors %}
+    <div class="has-error">
+        {{ form.password2(class="form-control",placeholder=form.password2.label.text) }}
+        <p class="text-danger">
+        {% for error in form.password2.errors %}
+            {{ error }}
+        {% endfor %}
+        </p>
+    </div>
+    {% else %}
+    <div>
+        {{ form.password2(class="form-control",placeholder=form.password2.label.text) }}
+    </div>
+    {% endif %}
+    </div>
+
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary form-control") }}
+    </div>
+
+    <div class="form-group">
+        <a class="btn btn-default" href="{{ url_for('auth.login') }}" role="button">已有账号？
+        </a>
+    </div>
+</form>
+</div>
+{% endblock %}

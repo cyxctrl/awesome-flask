@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href={{ url_for('static', filename='favicon.ico') }} type="image/x-icon">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-    <link rel="stylesheet" href={{ url_for('static',filename='bootstrap.css') }}>
-    <script src="{{ url_for('static',filename='jquery-1.12.0.js') }}"></script>
-    <script src="{{ url_for('static',filename='bootstrap.js') }}"></script>
-    <script src="{{ url_for('static',filename='moment.js') }}"></script>
-    {% block script %}{% endblock %}
+    <link rel="stylesheet" href={{ url_for('static',filename='css/bootstrap.min.css') }}>
+    <script src="{{ url_for('static',filename='js/jquery-1.12.0.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/moment.js') }}"></script>
+    {% block head %}{% endblock %}
     <title></title>
 </head>
 <body>
@@ -34,7 +34,7 @@
                     {% if current_user.is_authenticated %}
                     <li><a href="{{ url_for('blog.blogs') }}">Blog</a></li>
                     <li><a href="{{ url_for('todo.todos') }}">Todo</a></li>
-                    <li><a href="{{ url_for('markdownpage.markdown') }}">Markdown</a></li>
+                    <li><a href="{{ url_for('markdown_page.markdown') }}">Markdown</a></li>
                     {% endif %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
@@ -43,13 +43,14 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ current_user.username }} <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ url_for('profile.edit_profile') }}">修改资料</a></li>
-                            <li><a href="{{ url_for('profile.edit_password') }}">修改密码</a></li>
-                            <li><a href="{{ url_for('profile.edit_password_question') }}">修改密保</a></li>
+                            <li><a href="{{ url_for('profile.validate_password_edit_password') }}">修改密码</a></li>
+                            <li><a href="{{ url_for('profile.validate_password_edit_password_questions') }}">修改密保</a></li>
+                            <li role="separator" class="divider"></li>
                             <li><a href="{{ url_for('auth.logout') }}">登出账户</a></li>
                         </ul>
                     </li>
                     {% else %}
-                    <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+                    <li><a href="{{ url_for('auth.login') }}">登录</a></li>
                     {% endif %}
                 </ul>
             </div>

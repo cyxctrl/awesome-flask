@@ -1,8 +1,0 @@
-{% extends "base_not_logged_in.html" %}
-
-{% block content %}
-<div>
-    <a class="btn btn-primary btn-block" href="{{ url_for('auth.register') }}" role="button">注册</a>
-    <a class="btn btn-default btn-block" href="{{ url_for('auth.login') }}" role="button">登陆</a>
-</div>
-{% endblock %}

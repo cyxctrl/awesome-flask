@@ -1,0 +1,36 @@
+{% extends 'base_logged_in.html' %}
+
+{% block head %}
+    <script src="{{ url_for('static',filename='js/Markdown.Converter.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/Markdown.Sanitizer.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/autosize.min.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<h2>Markdown简明使用指南</h2>
+<div class="row">
+    <div class="col-md-6">
+        <h3 class="text-center">编辑</h3>
+    </div>
+    <div class="col-md-6">
+        <h3 class="text-center">预览</h3>
+    </div>
+</div>
+<form role="form">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{ form.content(only_input=True, class="form-control", placeholder=form.content.label.text, style="resize: none;") }}
+                    <script>
+                        autosize(document.querySelectorAll('textarea'));
+                    </script>
+                </div>
+            </div>
+            <div class="col-md-6">
+            {{ form.content(only_preview=True) }}
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

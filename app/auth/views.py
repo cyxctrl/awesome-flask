@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from . import auth
 from .. import mongo
 from ..models import User, CurrentUser
-from ..forms import LoginForm, RegisterForm, ForgetPasswordPre, ForgetPassword
+from ..forms import LoginForm, RegisterForm, ValidateUserForm, ValidatePasswordQuestionsForm, EditPasswordForm
 import datetime
 import random
 from flask.ext.login import login_user, logout_user
@@ -35,7 +35,7 @@ def register():
         flash('注册成功！')
         return redirect(url_for('auth.login'))
     bgname = str(int(random.random()*20))+'.jpg'
-    return render_template('register.html',form=form,bgname=bgname)
+    return render_template('auth/register.html',form=form,bgname=bgname)
 
 @auth.route('/login',methods=['GET','POST'])
 def login():
@@ -65,55 +65,18 @@ def login():
             return redirect(request.args.get('next') or url_for('profile.user',username=user['username']))
         flash('错误或不存在的邮箱、用户名和密码。')
     bgname = str(int(random.random()*20))+'.jpg'
-    return render_template('login.html',form=form,bgname=bgname)
+    return render_template('auth/login.html',form=form,bgname=bgname)
 
 @auth.route('/logout')
 def logout():
     logout_user()
     flash('注销成功！')
     bgname = str(int(random.random()*20))+'.jpg'
-    return render_template('index.html',bgname=bgname)
+    return render_template('home/index.html',bgname=bgname)
 
-@auth.route('/forget-password',methods=['GET','POST'])
-def forget_password():
-    if session.get('forget_email') is None or session.get('forget_username') is None:
-        abort(404)
-    else:
-        form = ForgetPassword()
-        question1 = question2 = None
-        email = session.get('forget_email')
-        username = session.get('forget_username')
-        user = mongo.db.user.find_one({'email':email,'username':username})
-        for (q,a) in user['password_questions'][0].items():
-            question1 = q
-            answer1 = a
-        for (q,a) in user['password_questions'][1].items():
-            question2 = q
-            answer2 = a
-        if request.method == 'POST' and form.validate_on_submit():
-            if form.answer1.data == answer1 and form.answer2.data == answer2:
-                mongo.db.user.update(
-                    {'username':username,'email':email},
-                    {'$set':
-                        {'password':generate_password_hash(form.new_password.data)}
-                    }
-                )
-                session.pop('forget_email',None)
-                session.pop('forget_username',None)
-                flash(u'您已设置新密码！！')
-                return redirect(url_for('auth.login'))
-            else:
-                flash(u'密保答案不正确！')
-                return redirect(url_for('.forget_password'))
-        form.email.data = session.get('forget_email')
-        form.username.data = session.get('forget_username')
-        return render_template(
-            'forget_password.html',form=form,question1=question1,question2=question2)
-
-
-@auth.route('/forget-password-pre',methods=['GET','POST'])
-def forget_password_pre():
-    form = ForgetPasswordPre()
+@auth.route('/validate-user',methods=['GET','POST'])
+def validate_user():
+    form = ValidateUserForm()
     if request.method == 'POST' and form.validate_on_submit():
         email = form.email.data
         username = form.username.data
@@ -121,7 +84,64 @@ def forget_password_pre():
         if user is not None:
             session['forget_email'] = email
             session['forget_username'] = username
-            return redirect(url_for('.forget_password'))
+            return redirect(url_for('.validate_password_questions'))
         else:
             flash(u'没有这个用户！')
-    return render_template('forget_password_pre.html',form=form)
+    return render_template('auth/validate_user.html',form=form)
+
+@auth.route('/validate-password-questions',methods=['GET','POST'])
+def validate_password_questions():
+    if session.get('forget_email') is None or session.get('forget_username') is None:
+        abort(404)
+    else:
+        form = ValidatePasswordQuestionsForm()
+        email = session.get('forget_email')
+        username = session.get('forget_username')
+        user = mongo.db.user.find_one({'email':email,'username':username})
+        if user is None:
+            flash(u'没有这个用户！')
+            return redirect('.validate_user')
+        if user['password_questions']:
+            question1 = user['password_questions'][0]
+            question2 = user['password_questions'][2]
+        else:
+            flash(u'你还没有设置密保问题，请联系管理员进行密码找回！')
+            return redirect(url_for('auth.login'))
+        if request.method == 'POST' and form.validate_on_submit():
+            answer1 = user['password_questions'][1]
+            answer2 = user['password_questions'][3]
+            if form.answer1.data == answer1 and form.answer2.data == answer2:
+                session['set_password'] = True
+                return redirect(url_for('auth.set_password'))
+            else:
+                flash(u'无法通过密保问题验证！')
+        form.email.data = session.get('forget_email')
+        form.username.data = session.get('forget_username')
+        return render_template(
+            'auth/validate_password_questions.html',form=form,question1=question1,question2=question2)
+
+@auth.route('/set-password',methods=['GET','POST'])
+def set_password():
+    form = EditPasswordForm()
+    if session.get('forget_email') and session.get('forget_username') and session.get('set_password'):
+        username = session.get('forget_username')
+        email = session.get('forget_email')
+        if mongo.db.user.find_one({'username':username,'email':email}) is None:
+            flash(u'没有这个用户！')
+            return redirect('.validate_user')
+        if request.method == 'POST' and form.validate_on_submit():
+            mongo.db.user.update(
+                {'username':username,'email':email},
+                {'$set':
+                    {'password':generate_password_hash(form.password.data)}
+                }
+            )
+            session.pop('forget_email',None)
+            session.pop('forget_username',None)
+            session.pop('set_password',None)
+            flash(u'您已设置新密码！！')
+            return redirect(url_for('auth.login'))
+        action = url_for('auth.set_password')
+        return render_template('profile/edit_password.html',action=action,form=form)
+    else:
+        abort(404)

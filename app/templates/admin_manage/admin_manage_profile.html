@@ -1,0 +1,74 @@
+{% extends "base_logged_in.html" %}
+
+{% block content %}
+<h1>编辑资料 - 管理员</h1>
+<form role="form" action="{{ url_for('admin_manage.admin_manage_profile',username=form.username.data) }}" method="post">
+    <div class="form-group">
+        {{ form.hidden_tag() }}
+    </div>
+
+    <div class="form-group">
+        <label>* 用户名</label>
+        {{ form.username(class="form-control",placeholder=form.username.label.text) }}
+    </div>
+
+    <div class="form-group">
+        <label>* 邮箱</label>
+        {{ form.email(class="form-control",placeholder=form.email.label.text) }}
+    </div>
+
+    <div class="form-group">
+        <label>自定义问题1</label>
+        {{ form.question1(class="form-control",placeholder=form.question1.label.text) }}
+    </div>
+
+    <div class="form-group">
+        <label>自定义问题1答案</label>
+        {{ form.answer1(class="form-control",placeholder=form.answer1.label.text) }}
+    </div>
+
+    <div class="form-group">
+        <label>自定义问题2</label>
+        {{ form.question2(class="form-control",placeholder=form.question2.label.text) }}
+    </div>
+
+    <div class="form-group">
+        <label>自定义问题2答案</label>
+        {{ form.answer2(class="form-control",placeholder=form.answer2.label.text) }}
+    </div>
+
+    <div class="form-group">
+        <label>权限</label>
+        {{ form.permission(class="form-control",placeholder=form.permission.label.text) }}
+        管理员-9 用户-5
+    </div>
+
+    <div class="form-group">
+        <label>注册时间</label>
+        {{ form.register_time(class="form-control",placeholder=form.register_time.label.text) }}
+        格式：2016-01-01 00:00:00
+    </div>
+
+    <div class="form-group">
+        <label>关注列表</label>
+        {{ form.following(class="form-control",placeholder=form.following.label.text) }}
+        格式：tom,jack,rose（使用英文 , 作为分隔标识）
+    </div>
+
+    <div class="form-group">
+        <label>位置</label>
+        {{ form.location(class="form-control",placeholder=form.location.label.text) }}
+    </div>
+
+    <div class="form-group">
+        <label>自我简介</label>
+        {{ form.about_me(class="form-control",placeholder=form.about_me.label.text) }}
+    </div>
+
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary form-control") }}
+    </div>
+</form>
+<a href="{{ url_for('admin_manage.delete_user',username=username) }}" class="btn btn-danger">删除账户</a>
+
+{% endblock %}

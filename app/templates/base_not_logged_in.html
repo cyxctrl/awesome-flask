@@ -6,13 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href={{ url_for('static', filename='favicon.ico') }} type="image/x-icon">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-    <link rel="stylesheet" href={{ url_for('static',filename='bootstrap.css') }}>
-    <script src="{{ url_for('static',filename='jquery-1.12.0.js') }}"></script>
-    <script src="{{ url_for('static',filename='bootstrap.js') }}"></script>
+    <link rel="stylesheet" href={{ url_for('static',filename='css/bootstrap.min.css') }}>
+    <script src="{{ url_for('static',filename='js/jquery-1.12.0.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
+    {% block head %}
+    {% endblock %}
     <title></title>
 </head>
 <body background="static/background/{{ bgname }}">
-    <div class="container">
+    <div class="container" style="height: 100%">
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for message in messages %}
@@ -23,10 +25,6 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-
-        <div style="text-align: center; color: white; font-size: 90px">
-            <p>BLOG</p>
-        </div>
         {% block content %}{% endblock %}
     </div>
 </body>

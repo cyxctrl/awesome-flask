@@ -2,21 +2,23 @@
 from flask import render_template, redirect, session, url_for, abort, request, flash
 from . import profile
 from .. import mongo
-from ..forms import EditProfileForm, EditPasswordForm, EditPasswordQuestionForm
+from ..forms import EditProfileForm, ValidatePasswordForm, EditPasswordForm, EditPasswordQuestionsForm
 from flask.ext.login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 @profile.route('/<username>')
-@login_required
 def user(username):
     user = mongo.db.user.find_one({'username':username})
     if user is None:
         abort(404)
-    blog_list = []
-    for bid in user['blogs_id']:
-        bg = mongo.db.blog.find_one(bid)
-        blog_list.append(bg)
-    return render_template('user.html',user=user,blog_list=blog_list)
+    elif current_user.is_authenticated and current_user.username == username:
+        return render_template('profile/current_user.html',user=user)
+    else:
+        blog_list = []
+        for bid in user['blogs_id']:
+            bg = mongo.db.blog.find_one(bid)
+            blog_list.append(bg)
+        return render_template('profile/user.html',user=user,blog_list=blog_list[::-1])
 
 @profile.route('/follow/<username>')
 @login_required
@@ -66,34 +68,63 @@ def edit_profile():
     form.username.data = user['username']
     form.location.data = user['location']
     form.about_me.data = user['about_me']
-    return render_template('edit_profile.html', form=form)
+    return render_template('profile/edit_profile.html', form=form)
+
+@profile.route('/validate-password-ep',methods=['GET','POST'])
+@login_required
+def validate_password_edit_password():
+    form = ValidatePasswordForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        user = mongo.db.user.find_one({'username':current_user.username})
+        if check_password_hash(user['password'],form.password.data):
+            session['edit_password'] = True
+            action = url_for('profile.edit_password')
+            return redirect(url_for('.edit_password',action=action))
+        else:
+            flash(u'密码验证不通过！')
+    action = url_for('profile.validate_password_edit_password')
+    return render_template('profile/validate_password.html',form=form,action=action)
 
 @profile.route('/edit-password', methods=['GET', 'POST'])
 @login_required
 def edit_password():
-    form = EditPasswordForm()
-    if request.method == 'POST' and form.validate_on_submit():
-        user = mongo.db.user.find_one({'username':current_user.username})
-        if check_password_hash(user['password'],form.old_password.data):
+    if session.get('edit_password'):
+        form = EditPasswordForm()
+        if request.method == 'POST' and form.validate_on_submit():
             mongo.db.user.update(
                 {'username':current_user.username},
                 {'$set':
-                    {'password':generate_password_hash(form.new_password.data)}
+                    {'password':generate_password_hash(form.password.data)}
                 }
             )
+            session.pop('edit_password',None)
             flash('密码修改成功！')
             return redirect(url_for('profile.user',username=current_user.username))
-        else:
-            flash('旧密码不正确！')
-    return render_template("edit_password.html", form=form)
+        return render_template('profile/edit_password.html',form=form)
+    else:
+        abort(404)
 
-@profile.route('/edit-password-question', methods=['GET', 'POST'])
+@profile.route('/validate-password-epq',methods=['GET','POST'])
 @login_required
-def edit_password_question():
-    form = EditPasswordQuestionForm()
-    user = mongo.db.user.find_one({'username':current_user.username})
+def validate_password_edit_password_questions():
+    form = ValidatePasswordForm()
     if request.method == 'POST' and form.validate_on_submit():
+        user = mongo.db.user.find_one({'username':current_user.username})
         if check_password_hash(user['password'],form.password.data):
+            session['edit_password_questions'] = True
+            action = url_for('profile.edit_password_questions')
+            return redirect(url_for('.edit_password_questions',action=action))
+        else:
+            flash(u'无法通过密码验证！')
+    action = url_for('profile.validate_password_edit_password_questions')
+    return render_template('profile/validate_password.html',form=form,action=action)
+
+@profile.route('/edit-password-questions', methods=['GET', 'POST'])
+@login_required
+def edit_password_questions():
+    if session.get('edit_password_questions'):
+        form = EditPasswordQuestionsForm()
+        if request.method == 'POST' and form.validate_on_submit():
             question1 = form.question1.data
             answer1 = form.answer1.data
             question2 = form.question2.data
@@ -103,20 +134,45 @@ def edit_password_question():
                 {'$set':
                     {'password_questions':
                         [
-                            {question1:answer1},
-                            {question2:answer2}
+                            question1,answer1,question2,answer2
                         ]
                     }
                 }
             )
+            session.pop('edit_password_questions',None)
             flash('密保问题修改成功！')
             return redirect(url_for('profile.user',username=current_user.username))
+        user = mongo.db.user.find_one({'username':current_user.username})
+        if user['password_questions']:
+            form.question1.data = user['password_questions'][0]
+            form.answer1.data = user['password_questions'][1]
+            form.question2.data = user['password_questions'][2]
+            form.answer2.data = user['password_questions'][3]
+        return render_template('profile/edit_password_questions.html', form=form)
+    else:
+        abort(404)
+
+@profile.route('/validate-password-du',methods=['GET','POST'])
+@login_required
+def validate_password_delete_user():
+    form = ValidatePasswordForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        user = mongo.db.user.find_one({'username':current_user.username})
+        if check_password_hash(user['password'],form.password.data):
+            session['delete_user'] = True
+            return redirect(url_for('.delete_user'))
         else:
-            flash('密码验证不通过！')
-    for (q,a) in user['password_questions'][0].items():
-        form.question1.data = q
-        form.answer1.data = a
-    for (q,a) in user['password_questions'][1].items():
-        form.question2.data = q
-        form.answer2.data = a
-    return render_template('edit_password_question.html', form=form)
+            flash(u'无法通过密码验证！')
+    action = url_for('profile.validate_password_delete_user')
+    return render_template('profile/validate_password.html',form=form,action=action)
+
+@profile.route('/delete-user')
+@login_required
+def delete_user():
+    if session.get('delete_user'):
+        mongo.db.user.remove({'username':current_user.username})
+        session.pop('delete_user',None)
+        flash(u'账户删除成功！')
+        return redirect(url_for('home.index'))
+    else:
+        abort(404)

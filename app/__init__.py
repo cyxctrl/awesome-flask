@@ -31,15 +31,14 @@ def create_app(config_name):
     from .profile import profile as profile_blueprint
     from .blog import blog as blog_blueprint
     from .todo import todo as todo_blueprint
-    from .markdownpage import markdownpage as markdownpage_blueprint
+    from .markdown_page import markdown_page as markdown_page_blueprint
+    from .admin_manage import admin_manage as admin_manage_blueprint
     app.register_blueprint(main_blueprint)
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(profile_blueprint)
     app.register_blueprint(blog_blueprint)
     app.register_blueprint(todo_blueprint)
-    app.register_blueprint(markdownpage_blueprint)
+    app.register_blueprint(markdown_page_blueprint)
+    app.register_blueprint(admin_manage_blueprint)
 
     return app
-
-#db = pymongo.MongoClient('localhost', 27017).awesome_flask
-#db = pymongo.MongoClient("mongo.duapp.com", 8908).oLNwgqNbtTNsiNjFoDGn

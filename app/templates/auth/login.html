@@ -1,0 +1,62 @@
+{% extends "base_not_logged_in.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href={{ url_for('static',filename='css/mystyle.css') }}>
+{% endblock%}
+{% block content %}
+<div class="vertical-center" style="width: 50%">
+<form role="form" action="{{ url_for('auth.login') }}" method="post" >
+    <div class="form-group">
+        {{ form.hidden_tag() }}
+    </div>
+
+    {% if form.username.errors %}
+    <div class="form-group has-error">
+        {{ form.username(class="form-control",placeholder=form.username.label.text) }}
+        <p class="text-danger">
+        {% for error in form.username.errors %}
+            {{ error }}
+        {% endfor %}
+        </p>
+    </div>
+    {% else %}
+    <div class="form-group">
+        {{ form.username(class="form-control",placeholder=form.username.label.text) }}
+    </div>
+    {% endif %}
+
+    {% if form.password.errors %}
+    <div class="form-group has-error">
+        {{ form.password(class="form-control",placeholder=form.password.label.text) }}
+        <p class="text-danger">
+        {% for error in form.password.errors %}
+            {{ error }}
+        {% endfor %}
+        </p>
+    </div>
+    {% else %}
+    <div class="form-group">
+        {{ form.password(class="form-control",placeholder=form.password.label.text) }}
+    </div>
+    {% endif %}
+
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary form-control") }}
+    </div>
+
+    <div class="checkbox">
+        <label>
+            {{ form.remember_me }} 记住我
+        </label>
+    </div>
+
+    <div class="form-group">
+        <a class="btn btn-default" href="{{ url_for('auth.register') }}" role="button">还没有账号？</a>
+    </div>
+
+    <div class="form-group">
+        <a class="btn btn-default" href="{{ url_for('auth.validate_user') }}" role="button">忘记密码？</a>
+    </div>
+</form>
+</div>
+{% endblock %}

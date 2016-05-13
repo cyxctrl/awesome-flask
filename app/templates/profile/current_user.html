@@ -1,0 +1,46 @@
+{% extends "base_logged_in.html" %}
+
+{% block content %}
+
+{% if user['username'] == current_user.username %}
+{% if not user['password_questions'] %}
+<p class="text-danger">您还没有设置密保问题，这将导致您无法进行密码找回！</p>
+{% endif %}
+<div class="page-header"><h1>Hello, {{ user.username }}</h1></div>
+<p>上次登录 {{ momentjs(user.last_login_time).format('YYYY-MM-DD HH:mm') }}</p>
+<p>注册时间 {{ momentjs(user.register_time).format('YYYY-MM-DD HH:mm') }}</p>
+<p>注册邮箱 {{ user.email }}</p>
+<p>权限
+    {% if user.permission == 5 %}<span class="text-info">普通用户</span>{% endif %}
+    {% if user.permission == 9 %}<span class="text-danger">管理员</span>{% endif %}
+</p>
+{% if user.location %}
+    <p>位置 <a href="http://ditu.amap.com/search?query={{ user.location }}" target="_blank">{{ user.location }}</a></p>
+{% endif %}
+<h3>个人简介</h3>
+<blockquote>
+    <p>{{ user.about_me }}</p>
+</blockquote>
+
+<h3>我的关注</h3>
+{% if user.following[0] %}
+<div class="row">
+    {% for u in user.following %}
+    <div class="col-md-3">
+        <div class="col-md-3">
+            <p><a href="{{ url_for('profile.user',username=u) }}" target="_blank">{{ u }}</a></p>
+        </div>
+        <div class="col-md-9">
+            <p><a href="{{ url_for('profile.unfollow',username=u) }}" class="btn btn-default">取消关注</a></p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+    <p>还没有关注任何人。</p>
+{% endif %}
+
+{% else %}
+<h1>未知错误</h1>
+{% endif%}
+{% endblock %}
