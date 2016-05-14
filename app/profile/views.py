@@ -17,7 +17,8 @@ def user(username):
         blog_list = []
         for bid in user['blogs_id']:
             bg = mongo.db.blog.find_one(bid)
-            blog_list.append(bg)
+            if bg['permission'] == 'public':
+                blog_list.append(bg)
         return render_template('profile/user.html',user=user,blog_list=blog_list[::-1])
 
 @profile.route('/follow/<username>')
@@ -61,7 +62,7 @@ def edit_profile():
                 }
             }
         )
-        flash(u'你的个人信息已更新。')
+        flash('你的个人信息已更新。')
         return redirect(url_for('.user', username=current_user.username))
     user = mongo.db.user.find_one({'username':current_user.username})
     form.email.data = user['email']
@@ -81,9 +82,10 @@ def validate_password_edit_password():
             action = url_for('profile.edit_password')
             return redirect(url_for('.edit_password',action=action))
         else:
-            flash(u'密码验证不通过！')
+            flash('密码验证不通过！')
     action = url_for('profile.validate_password_edit_password')
-    return render_template('profile/validate_password.html',form=form,action=action)
+    tips = '需要验证旧密码才能修改密码。'
+    return render_template('profile/validate_password.html',form=form,action=action,tips=tips)
 
 @profile.route('/edit-password', methods=['GET', 'POST'])
 @login_required
@@ -115,9 +117,10 @@ def validate_password_edit_password_questions():
             action = url_for('profile.edit_password_questions')
             return redirect(url_for('.edit_password_questions',action=action))
         else:
-            flash(u'无法通过密码验证！')
+            flash('无法通过密码验证！')
     action = url_for('profile.validate_password_edit_password_questions')
-    return render_template('profile/validate_password.html',form=form,action=action)
+    tips = '需要验证密码才能修改密保。'
+    return render_template('profile/validate_password.html',form=form,action=action,tips=tips)
 
 @profile.route('/edit-password-questions', methods=['GET', 'POST'])
 @login_required
@@ -162,17 +165,27 @@ def validate_password_delete_user():
             session['delete_user'] = True
             return redirect(url_for('.delete_user'))
         else:
-            flash(u'无法通过密码验证！')
+            flash('无法通过密码验证！')
     action = url_for('profile.validate_password_delete_user')
-    return render_template('profile/validate_password.html',form=form,action=action)
+    tips = '需要验证密码才能删除账户。'
+    return render_template('profile/validate_password.html',form=form,action=action,tips=tips)
 
 @profile.route('/delete-user')
 @login_required
 def delete_user():
     if session.get('delete_user'):
-        mongo.db.user.remove({'username':current_user.username})
+        username = current_user.username
+        blogs_id = mongo.db.user.find_one({'username':username})['blogs_id']
+        for bid in blogs_id:
+            mongo.db.blog.find_one_and_delete({'_id':bid})
+        todos_id = mongo.db.user.find_one({'username':username})['todos_id']
+        for tid in todos_id:
+            mongo.db.todo.find_one_and_delete({'_id':tid})
+        markdown_id = mongo.db.user.find_one({'username':username})['markdown_id']
+        mongo.db.markdown.find_one_and_delete({'_id':markdown_id})
+        mongo.db.user.remove({'username':username})
         session.pop('delete_user',None)
-        flash(u'账户删除成功！')
+        flash('账户删除成功！')
         return redirect(url_for('home.index'))
     else:
         abort(404)

@@ -4,41 +4,43 @@
     <link rel="stylesheet" href={{ url_for('static',filename='css/mystyle.css') }}>
 {% endblock%}
 {% block content %}
-<div class="vertical-center" style="width: 50%">
+{{ super() }}
 <form role="form" action="{{ url_for('auth.login') }}" method="post" >
     <div class="form-group">
         {{ form.hidden_tag() }}
     </div>
 
-    {% if form.username.errors %}
-    <div class="form-group has-error">
-        {{ form.username(class="form-control",placeholder=form.username.label.text) }}
-        <p class="text-danger">
-        {% for error in form.username.errors %}
-            {{ error }}
-        {% endfor %}
-        </p>
-    </div>
-    {% else %}
     <div class="form-group">
-        {{ form.username(class="form-control",placeholder=form.username.label.text) }}
-    </div>
-    {% endif %}
+        {% if form.username.errors %}
+        <div class="has-error">
+            {{ form.username(class="form-control",placeholder=form.username.label.text) }}
+            <p class="text-danger">
+            {% for error in form.username.errors %}
+                {{ error }}
+            {% endfor %}
+            </p>
+        </div>
+        {% else %}
+        <div>
+            {{ form.username(class="form-control",placeholder=form.username.label.text) }}
+        </div>
+        {% endif %}
 
-    {% if form.password.errors %}
-    <div class="form-group has-error">
-        {{ form.password(class="form-control",placeholder=form.password.label.text) }}
-        <p class="text-danger">
-        {% for error in form.password.errors %}
-            {{ error }}
-        {% endfor %}
-        </p>
+        {% if form.password.errors %}
+        <div class="has-error">
+            {{ form.password(class="form-control",placeholder=form.password.label.text) }}
+            <p class="text-danger">
+            {% for error in form.password.errors %}
+                {{ error }}
+            {% endfor %}
+            </p>
+        </div>
+        {% else %}
+        <div class="form-group">
+            {{ form.password(class="form-control",placeholder=form.password.label.text) }}
+        </div>
+        {% endif %}
     </div>
-    {% else %}
-    <div class="form-group">
-        {{ form.password(class="form-control",placeholder=form.password.label.text) }}
-    </div>
-    {% endif %}
 
     <div class="form-group">
         {{ form.submit(class="btn btn-primary form-control") }}

@@ -6,8 +6,8 @@ from . import login_manager
 
 class User():
     def __init__(self,username,password,email,register_time,last_login_time,
-                permission=5,location='',about_me=u'这个人很懒，什么都没有写',
-                blogs_id=[],todos_id=[],markdown_id=[],following=[],password_questions=[]):
+                permission=5,location='',about_me='这个人很懒，什么都没有写',
+                blogs_id=[],todos_id=[],markdown_id='',following=[],password_questions=[]):
         self.email = email
         self.username = username
         self.password = password
@@ -44,7 +44,7 @@ class User():
         markdown_id = mongo.db.markdown.save({'text':''})
         mongo.db.user.update(
             {'username':self.username},
-            {'$push':{'markdown_id':markdown_id}}
+            {'$set':{'markdown_id':markdown_id}}
         )
 
 class CurrentUser(UserMixin):

@@ -3,7 +3,7 @@
     <link rel="stylesheet" href={{ url_for('static',filename='css/mystyle.css') }}>
 {% endblock%}
 {% block content %}
-<div class="vertical-center" style="width: 50%">
+{{ super() }}
     <a class="btn btn-primary btn-block" href="{{ url_for('auth.register') }}" role="button">注册</a>
     <a class="btn btn-default btn-block" href="{{ url_for('auth.login') }}" role="button">登陆</a>
 </div>

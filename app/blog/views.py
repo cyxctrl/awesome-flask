@@ -11,11 +11,21 @@ from flask.ext.login import login_required, current_user
 @blog.route('/article/<string:blog_id>')
 def article(blog_id):
     blog = mongo.db.blog.find_one({'_id':bson.ObjectId(blog_id)})
-    comment_list = []
-    for cid in blog['comments_id']:
-        comment = mongo.db.comment.find_one({'_id':cid})
-        comment_list.append(comment)
-    return render_template('blog/article.html',blog = blog,comment_list = comment_list)
+    if blog['permission'] == 'private':
+        if blog['author'] == current_user.username:
+            comment_list = []
+            for cid in blog['comments_id']:
+                comment = mongo.db.comment.find_one({'_id':cid})
+                comment_list.append(comment)
+            return render_template('blog/article.html',blog=blog,comment_list=comment_list)
+        else:
+            abort(404)
+    else:
+        comment_list = []
+        for cid in blog['comments_id']:
+            comment = mongo.db.comment.find_one({'_id':cid})
+            comment_list.append(comment)
+        return render_template('blog/article.html',blog=blog,comment_list=comment_list)
 
 @blog.route('/blogs')
 @login_required
@@ -27,7 +37,7 @@ def blogs():
         bg = mongo.db.blog.find_one(bid)
         blog_list.append(bg)
     blog_list = sorted(blog_list,key=lambda e:e['last_modify_time'],reverse=True)
-    return render_template('blog/blogs.html',blog_list = blog_list)
+    return render_template('blog/blogs.html',blog_list=blog_list)
 
 @blog.route('/article-add',methods=['GET','POST'])
 @login_required
@@ -45,7 +55,7 @@ def article_add():
         )
         blog_id = blog.save(username)
         return redirect(url_for('.article',blog_id=blog_id))
-    form.submit.label.text = u'增加'
+    form.submit.label.text = '增加'
     return render_template('blog/article_edit.html',form=form)
 
 @blog.route('/article-modify/<string:blog_id>',methods=['GET','POST'])
@@ -72,7 +82,7 @@ def article_modify(blog_id):
         return redirect(url_for('.article',blog_id=blog_id))
     blog = mongo.db.blog.find_one({'_id':bson.ObjectId(blog_id)})
     form.title.data = blog['title']
-    form.submit.label.text = u'修改'
+    form.submit.label.text = '修改'
     return render_template('blog/article_edit.html',form=form,blog=blog)
 
 @blog.route('/blogs/modify/<string:blog_id>',methods=['POST'])

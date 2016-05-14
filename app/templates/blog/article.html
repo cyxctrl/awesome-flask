@@ -5,113 +5,59 @@
 {% endblock %}
 
 {% block content %}
-{% if blog['permission'] == 'public' %}
-    <h1>{{ blog['title'] }}</h1>
-    <h3>created by <a href="{{ url_for('profile.user',username=blog['author']) }} target="_blank" "><em>{{ blog['author'] }}</em></a></h3>
-    <p>
-        文章创建时间：{{ momentjs(blog['create_time']).format('YYYY-MM-DD HH:mm') }}
-        上次修改时间：{{ momentjs(blog['last_modify_time']).format('YYYY-MM-DD HH:mm') }}
-        文章权限：<span class="text-warning">{% if blog['permission'] =='public' %}公开{% else %}不公开{% endif %}</span>
-    </p>
-    {% if current_user.is_authenticated and current_user.username == blog['author'] %}
-    <p><a href="{{ url_for('blog.article_modify',blog_id=blog['_id']) }}">编辑文章</a> </p>
-    {% endif %}
-    <hr />
-    <div>
-        {{ blog['article']|safe }}
+
+<h1>{{ blog['title'] }}</h1>
+<h4>created by <a href="{{ url_for('profile.user',username=blog['author']) }} target="_blank" "><em>{{ blog['author'] }}</em></a></h4>
+<p>
+    文章创建时间：{{ momentjs(blog['create_time']).format('YYYY-MM-DD HH:mm') }}
+    上次修改时间：{{ momentjs(blog['last_modify_time']).format('YYYY-MM-DD HH:mm') }}
+    文章权限：<span class="text-warning">{% if blog['permission'] =='public' %}公开{% else %}不公开{% endif %}</span>
+</p>
+
+{% if current_user.is_authenticated and current_user.username == blog['author'] %}
+<p><a href="{{ url_for('blog.article_modify',blog_id=blog['_id']) }}">编辑文章</a> </p>
+{% endif %}
+
+<hr />
+<div>
+    {{ blog['article']|safe }}
+</div>
+<hr />
+<h2>评论区</h2>
+{% if comment_list[0] %}
+<hr />
+<div class="row">
+    {% for comment in comment_list %}
+    <div class="col-md-6">
+        <h3>评论：{{ blog['title'] }}</h3>
+        <h4>
+        <a href="{{ url_for('profile.user',username=comment['author']) }}" target="_blank">{{ comment['author'] }}</a>
+        <small>{{ momentjs(comment['create_time']).format('YYYY-MM-DD HH:mm') }}</small></h4>
+        <p>{{ comment['content'] | safe }}</p>
+        {% if current_user.is_authenticated and current_user.username == blog['author'] %}
+        <a href="{{ url_for('blog.blog_del_comment',blog_id=blog['_id'],comment_id=comment['_id']) }}" class="text-danger">- 删除评论 -</a>
+        {% elif current_user.is_authenticated and current_user.username == comment['author'] %}
+        <a href="{{ url_for('blog.blog_del_comment',blog_id=blog['_id'],comment_id=comment['_id']) }}" class="text-danger">- 删除评论 -</a>
+        {% endif %}
+        <hr />
     </div>
-    <hr />
-
-    <h2>评论区</h2>
-    {% if comment_list[0] %}
-    <hr />
-    <div class="row">
-        {% for comment in comment_list %}
-        <div class="col-md-6">
-            <h3>评论：{{ blog['title'] }}</h3>
-            <h4>
-                <a href="{{ url_for('profile.user',username=comment['author']) }}" target="_blank">{{ comment['author'] }}</a>
-                <small>{{ momentjs(comment['create_time']).format('YYYY-MM-DD HH:mm') }}</small>
-            </h4>
-            <p>{{ comment['content'] | safe }}</p>
-            {% if current_user.is_authenticated and current_user.username == blog['author'] %}
-            <a href="{{ url_for('blog.blog_del_comment',blog_id=blog['_id'],comment_id=comment['_id']) }}" class="text-danger">- 删除评论 -</a>
-            {% elif current_user.is_authenticated and current_user.username == comment['author'] %}
-            <a href="{{ url_for('blog.blog_del_comment',blog_id=blog['_id'],comment_id=comment['_id']) }}" class="text-danger">- 删除评论 -</a>
-            {% endif %}
-            <hr />
-        </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <h3>暂无评论</h3>
-    {% endif %}
-
-    {% if current_user.is_authenticated %}
-    <h3>添加评论</h3>
-    <form action="{{ url_for('blog.blog_add_comment',blog_id=blog['_id']) }}" method="post">
-        <div class="form-group">
-            <textarea name="content" id="editor" class="ckeditor" rows="100" cols="80"></textarea>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-default">提交</button>
-        </div>
-    </form>
-    {% else %}
-    <p>想添加评论？<a href="{{ url_for('auth.login') }}">登录</a></p>
-    {% endif %}
-
-{% elif blog['author'] == current_user.username %}
-
-    <h1>{{ blog['title'] }}</h1>
-    <h4>created by <a href="{{ url_for('profile.user',username=blog['author']) }} target="_blank" "><em>{{ blog['author'] }}</em></a></h4>
-    <p>
-        文章创建时间：{{ momentjs(blog['create_time']).format('YYYY-MM-DD HH:mm') }}
-        上次修改时间：{{ momentjs(blog['last_modify_time']).format('YYYY-MM-DD HH:mm') }}
-        文章权限：<span class="text-warning">{% if blog['permission'] =='public' %}公开{% else %}不公开{% endif %}</span>
-    </p>
-    {% if current_user.is_authenticated and current_user.username == blog['author'] %}
-    <p><a href="{{ url_for('blog.article_modify',blog_id=blog['_id']) }}">编辑文章</a> </p>
-    {% endif %}
-    <hr />
-    <div>
-        {{ blog['article']|safe }}
-    </div>
-    <hr />
-    <h2>评论区</h2>
-    {% if comment_list[0] %}
-    <hr />
-    <div class="row">
-        {% for comment in comment_list %}
-        <div class="col-md-6">
-            <h3>评论：{{ blog['title'] }}</h3>
-            <h4>
-            <a href="{{ url_for('profile.user',username=comment['author']) }}" target="_blank">{{ comment['author'] }}</a>
-            <small>{{ momentjs(comment['create_time']).format('YYYY-MM-DD HH:mm') }}</small></h4>
-            <p>{{ comment['content'] | safe }}</p>
-            {% if current_user.is_authenticated and current_user.username == blog['author'] %}
-            <a href="{{ url_for('blog.blog_del_comment',blog_id=blog['_id'],comment_id=comment['_id']) }}" class="text-danger">- 删除评论 -</a>
-            {% elif current_user.is_authenticated and current_user.username == comment['author'] %}
-            <a href="{{ url_for('blog.blog_del_comment',blog_id=blog['_id'],comment_id=comment['_id']) }}" class="text-danger">- 删除评论 -</a>
-            {% endif %}
-            <hr />
-        </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <h3>暂无评论</h3>
-    {% endif %}
-
-    <h3>添加评论</h3>
-    <form action="{{ url_for('blog.blog_add_comment',blog_id=blog['_id']) }}" method="post">
-        <div class="form-group">
-            <textarea name="content" id="editor" class="ckeditor" rows="100" cols="80"></textarea>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-default">提交</button>
-        </div>
-    </form>
+    {% endfor %}
+</div>
 {% else %}
-    <h2>你无法查看这篇文章。</h2>
+<h3>暂无评论</h3>
+{% endif %}
+
+<h3>添加评论</h3>
+{% if current_user.is_authenticated %}
+<form action="{{ url_for('blog.blog_add_comment',blog_id=blog['_id']) }}" method="post">
+    <div class="form-group">
+        <textarea name="content" id="editor" class="ckeditor" rows="100" cols="80"></textarea>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-default">提交</button>
+    </div>
+</form>
+{% else %}
+<p>想添加评论？请先<a href="{{ url_for('auth.login') }}">登录</a></p>
 {% endif %}
 {% endblock %}

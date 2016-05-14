@@ -2,8 +2,9 @@
 from flask import render_template, redirect, url_for, session, flash
 from . import home
 from ..forms import PageDownForm
-import random
 from flask.ext.login import current_user
+from ..auth.views import backgroundPicture, text
+import datetime
 
 @home.app_errorhandler(404)
 def page_not_found(e):
@@ -17,5 +18,5 @@ def internal_server_error(e):
 def index():
     if current_user.is_authenticated:
         return redirect(url_for('profile.user',username=current_user.username))
-    bgname = str(int(random.random()*20))+'.jpg'
-    return render_template('home/index.html',bgname=bgname)
+    bgname = backgroundPicture(datetime.datetime.utcnow().timestamp())
+    return render_template('home/index.html',bgname=bgname,text=text)

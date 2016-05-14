@@ -13,7 +13,7 @@
 
     {% if form.title.errors %}
     <div class="form-group has-error">
-        <label>文章标题</label>
+        <label>*文章标题</label>
         {{ form.title(class="form-control",placeholder=form.title.label.text) }}
         <p class="text-danger">
         {% for error in form.title.errors %}
@@ -23,6 +23,7 @@
     </div>
     {% else %}
     <div class="form-group">
+        <label>*文章标题</label>
         {{ form.title(class="form-control",placeholder=form.title.label.text) }}
     </div>
     {% endif %}
@@ -35,12 +36,12 @@
     </div>
 
     <div class="form-group">
-        <p>默认文章权限为<em>私密</em></p>
+        <p>默认文章权限为<em>私有</em></p>
         <label class="radio-inline">
         {{ form.permission(type="radio",value="public") }}公开
         </label>
         <label class="radio-inline">
-        {{ form.permission(type="radio",value="private",checked="checked") }}私密
+        {{ form.permission(type="radio",value="private",checked="checked") }}私有
         </label>
         {% if form.permission.errors %}
         <p class="text-danger">
@@ -64,7 +65,7 @@
 
     {% if form.title.errors %}
     <div class="form-group has-error">
-        <label>文章标题</label>
+        <label>*文章标题</label>
         {{ form.title(class="form-control",placeholder=form.title.label.text) }}
         <p class="text-danger">
         {% for error in form.title.errors %}
@@ -74,6 +75,7 @@
     </div>
     {% else %}
     <div class="form-group">
+        <label>*文章标题</label>
         {{ form.title(class="form-control",placeholder=form.title.label.text) }}
     </div>
     {% endif %}
@@ -85,12 +87,12 @@
     </div>
 
     <div class="form-group">
-        <p>默认文章权限为私密</p>
+        <p>默认文章权限为私有</p>
         <label class="radio-inline">
         {{ form.permission(type="radio",value="public") }}公开
         </label>
         <label class="radio-inline">
-        {{ form.permission(type="radio",value="private",checked="checked") }}私密
+        {{ form.permission(type="radio",value="private",checked="checked") }}私有
         </label>
         {% if form.permission.errors %}
         <p class="text-danger">

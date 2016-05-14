@@ -6,13 +6,16 @@ from .momentjs import momentjs
 from flask_pagedown import PageDown
 from flask.ext.login import LoginManager
 
+#import sys
+#reload(sys)
+#sys.setdefaultencoding('utf-8')
+
 mongo = PyMongo()
 pagedown = PageDown()
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
-login_manager.login_message = u'请登陆后再操作。'
-login_manager.remember_cookie_name = u'remember_me_token'
+login_manager.login_message = '请登陆后再操作。'
 
 def create_app(config_name):
     app = Flask(__name__)

@@ -16,15 +16,13 @@ class DevelopmentConfig(Config):
 class ProductionConfig(Config):
     DEBUG = False
     MONGO_HOST = 'mongo.duapp.com'
-    MONGO_PORT = 8909
+    MONGO_PORT = 8908
     MONGO_DBNAME = 'oLNwgqNbtTNsiNjFoDGn'
+    MONGO_USERNAME = '07b03aafdcd04c23b8b73ebc0a71ed33'
+    MONGO_PASSWORD = '26e4fbac39534a8abcbdc3c7352e7035'
 
 config = {
     'development': DevelopmentConfig,
     'production': ProductionConfig,
     'default': DevelopmentConfig
 }
-
-
-#db = pymongo.MongoClient('localhost', 27017).awesome_flask
-#db = pymongo.MongoClient("mongo.duapp.com", 8908).oLNwgqNbtTNsiNjFoDGn

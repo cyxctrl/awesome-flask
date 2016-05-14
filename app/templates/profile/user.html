@@ -37,21 +37,28 @@
     {% endif %}
 </div>
 <h3>
-    <a data-toggle="collapse" href="#article" aria-expanded="false">文章列表</a>
-</h3>
-<div class="collapse" id="article">
-    {% if blog_list[0] %}
-        {% for blog in blog_list %}
-            {% if blog['permission'] == 'public' %}
-            <hr />
-            <h4><a href="{{ url_for('blog.article',blog_id=blog['_id']) }}" target="_blank">{{ blog['title'] }}</a></h4>
-            <p>{{ momentjs(blog['create_time']).format('YYYY-MM-DD HH:mm') }}</p>
-            <p>{{ blog['article'] | truncate(100) }}</p>
-            {% endif %}
-        {% endfor %}
-    {% else %}
-    <p>还没有文章。</p>
+    文章列表
+    {% if blog_list[1] %}
+    <small class="text-right"><a data-toggle="collapse" href="#article" aria-expanded="false">查看更多<b class="caret"></b></a></small>
     {% endif %}
+</h3>
+{% if blog_list[0] %}
+<hr />
+<h4><a href="{{ url_for('blog.article',blog_id=blog_list[0]['_id']) }}" target="_blank">{{ blog_list[0]['title'] }}</a></h4>
+<p>{{ momentjs(blog_list[0]['create_time']).format('YYYY-MM-DD HH:mm') }}</p>
+<p>{{ blog_list[0]['article'] | truncate(100) }}</p>
+<div class="collapse" id="article">
+{% for blog in blog_list[1:] %}
+    {% if blog['permission'] == 'public' %}
+    <hr />
+    <h4><a href="{{ url_for('blog.article',blog_id=blog['_id']) }}" target="_blank">{{ blog['title'] }}</a></h4>
+    <p>{{ momentjs(blog['create_time']).format('YYYY-MM-DD HH:mm') }}</p>
+    <p>{{ blog['article'] | truncate(100) }}</p>
+    {% endif %}
+{% endfor %}
+{% else %}
+<p>还没有文章。</p>
+{% endif %}
 </div>
 
 {% endblock %}

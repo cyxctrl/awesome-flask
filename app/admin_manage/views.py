@@ -65,9 +65,16 @@ def admin_manage_profile(username):
 @login_required
 def delete_user(username):
     if session.get('delete_user'):
+        blogs_id = mongo.db.user.find_one({'username':username})['blogs_id']
+        for bid in blogs_id:
+            mongo.db.blog.find_one_and_delete({'_id':bid})
+        todos_id = mongo.db.user.find_one({'username':username})['todos_id']
+        for tid in todos_id:
+            mongo.db.todo.find_one_and_delete({'_id':tid})
+        markdown_id = mongo.db.user.find_one({'username':username})['markdown_id']
+        mongo.db.markdown.find_one_and_delete({'_id':markdown_id})
         mongo.db.user.remove({'username':username})
-        session.pop('delete_user',None)
-        flash(u'账户删除成功！')
+        flash('账户删除成功！')
         return redirect(url_for('home.index'))
     else:
         abort(404)

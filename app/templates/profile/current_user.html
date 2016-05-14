@@ -22,23 +22,25 @@
     <p>{{ user.about_me }}</p>
 </blockquote>
 
-<h3>我的关注</h3>
-{% if user.following[0] %}
-<div class="row">
-    {% for u in user.following %}
-    <div class="col-md-3">
+<h3><a data-toggle="collapse" href="#following" aria-expanded="false">我正在关注<b class="caret"></b></a></h3>
+<div class="collapse" id="following">
+    {% if user.following[0] %}
+    <div class="row">
+        {% for u in user.following %}
         <div class="col-md-3">
-            <p><a href="{{ url_for('profile.user',username=u) }}" target="_blank">{{ u }}</a></p>
+            <div class="col-md-3">
+                <p><a href="{{ url_for('profile.user',username=u) }}" target="_blank">{{ u }}</a></p>
+            </div>
+            <div class="col-md-9">
+                <p><a href="{{ url_for('profile.unfollow',username=u) }}" class="btn btn-default">取消关注</a></p>
+            </div>
         </div>
-        <div class="col-md-9">
-            <p><a href="{{ url_for('profile.unfollow',username=u) }}" class="btn btn-default">取消关注</a></p>
-        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
-{% else %}
+    {% else %}
     <p>还没有关注任何人。</p>
-{% endif %}
+    {% endif %}
+</div>
 
 {% else %}
 <h1>未知错误</h1>

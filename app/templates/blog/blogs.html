@@ -7,25 +7,28 @@
 
 {% if blog_list[0] %}
 {% for blog in blog_list %}
-<hr />
-<div>
-    <h2>{{ blog['title'] }}</h2>
-    <p>
-        create {{ momentjs(blog['create_time']).format('YYYY-MM-DD HH:mm') }}
-        <span class="text-warning">
+<div class="row">
+    <hr />
+    <div class="col-md-10">
+        <h2>{{ blog['title'] }}</h2>
+        <p>
+            创建时间 {{ momentjs(blog['create_time']).format('YYYY-MM-DD HH:mm') }}
+            修改时间 {{ momentjs(blog['last_modify_time']).format('YYYY-MM-DD HH:mm') }}
+        </p>
+        <p>{{ blog['article'] | truncate(100) }}</p>
+    </div>
+    <div class="col-md-2">
+        <p class="text-center">是否公开：
         {% if blog['permission'] == 'private' %}
-        私密
+        是
         {% else %}
-        公开
+        否
         {% endif%}
-        </span>
-    </p>
-    <p>{{ blog['article'] | truncate(100) }}</p>
-    <p>
-        <a href="{{ url_for('blog.article',blog_id=blog['_id']) }}" class="btn btn-primary">查看</a>
-        <a href="{{ url_for('blog.article_modify',blog_id=blog['_id']) }}" class="btn btn-success">修改</a>
-        <a href="{{ url_for('blog.blog_delete',blog_id=blog['_id']) }}" class="btn btn-danger">删除</a>
-    </p>
+        </p>
+        <p><a href="{{ url_for('blog.article',blog_id=blog['_id']) }}" class="btn btn-primary form-control">查看</a></p>
+        <p><a href="{{ url_for('blog.article_modify',blog_id=blog['_id']) }}" class="btn btn-success form-control">修改</a></p>
+        <p><a href="{{ url_for('blog.blog_delete',blog_id=blog['_id']) }}" class="btn btn-danger form-control">删除</a></p>
+    </div>
 </div>
 {% endfor %}
 {% else %}

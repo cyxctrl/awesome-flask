@@ -5,7 +5,7 @@
 {% endblock%}
 
 {% block content %}
-<div class="vertical-center" style="width: 50%">
+{{ super() }}
 <form role="form" action="{{ url_for('auth.register') }}" method="post">
     <div class="form-group">
         {{ form.hidden_tag() }}

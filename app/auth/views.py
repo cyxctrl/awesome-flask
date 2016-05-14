@@ -6,18 +6,24 @@ from .. import mongo
 from ..models import User, CurrentUser
 from ..forms import LoginForm, RegisterForm, ValidateUserForm, ValidatePasswordQuestionsForm, EditPasswordForm
 import datetime
-import random
 from flask.ext.login import login_user, logout_user
+
+text = 'Life is short, and you need Python.'
+
+def backgroundPicture(timestamp):
+    name = int(timestamp % 10)
+    bgname = str(name) + '.jpg'
+    return bgname
 
 @auth.route('/register',methods=['GET','POST'])
 def register():
     form = RegisterForm()
     if request.method == 'POST' and form.validate_on_submit():
         if mongo.db.user.find_one({'email':form.email.data}):
-            flash(u'邮箱已被注册。')
+            flash('邮箱已被注册。')
             return redirect(url_for('auth.register'))
         if mongo.db.user.find_one({'username':form.username.data}):
-            flash(u'用户名已被使用。')
+            flash('用户名已被使用。')
             return redirect(url_for('auth.register'))
         user = User(
             email           = form.email.data,
@@ -34,8 +40,8 @@ def register():
                 )
         flash('注册成功！')
         return redirect(url_for('auth.login'))
-    bgname = str(int(random.random()*20))+'.jpg'
-    return render_template('auth/register.html',form=form,bgname=bgname)
+    bgname = backgroundPicture(datetime.datetime.utcnow().timestamp())
+    return render_template('auth/register.html',form=form,bgname=bgname,text=text)
 
 @auth.route('/login',methods=['GET','POST'])
 def login():
@@ -64,15 +70,15 @@ def login():
             login_user(user_obj,form.remember_me.data)
             return redirect(request.args.get('next') or url_for('profile.user',username=user['username']))
         flash('错误或不存在的邮箱、用户名和密码。')
-    bgname = str(int(random.random()*20))+'.jpg'
-    return render_template('auth/login.html',form=form,bgname=bgname)
+    bgname = backgroundPicture(datetime.datetime.utcnow().timestamp())
+    return render_template('auth/login.html',form=form,bgname=bgname,text=text)
 
 @auth.route('/logout')
 def logout():
     logout_user()
     flash('注销成功！')
-    bgname = str(int(random.random()*20))+'.jpg'
-    return render_template('home/index.html',bgname=bgname)
+    bgname = backgroundPicture(datetime.datetime.utcnow().timestamp())
+    return render_template('home/index.html',bgname=bgname,text=text)
 
 @auth.route('/validate-user',methods=['GET','POST'])
 def validate_user():
@@ -86,7 +92,7 @@ def validate_user():
             session['forget_username'] = username
             return redirect(url_for('.validate_password_questions'))
         else:
-            flash(u'没有这个用户！')
+            flash('没有这个用户！')
     return render_template('auth/validate_user.html',form=form)
 
 @auth.route('/validate-password-questions',methods=['GET','POST'])
@@ -99,13 +105,13 @@ def validate_password_questions():
         username = session.get('forget_username')
         user = mongo.db.user.find_one({'email':email,'username':username})
         if user is None:
-            flash(u'没有这个用户！')
+            flash('没有这个用户！')
             return redirect('.validate_user')
         if user['password_questions']:
             question1 = user['password_questions'][0]
             question2 = user['password_questions'][2]
         else:
-            flash(u'你还没有设置密保问题，请联系管理员进行密码找回！')
+            flash('你还没有设置密保问题，请联系管理员进行密码找回！')
             return redirect(url_for('auth.login'))
         if request.method == 'POST' and form.validate_on_submit():
             answer1 = user['password_questions'][1]
@@ -114,7 +120,7 @@ def validate_password_questions():
                 session['set_password'] = True
                 return redirect(url_for('auth.set_password'))
             else:
-                flash(u'无法通过密保问题验证！')
+                flash('无法通过密保问题验证！')
         form.email.data = session.get('forget_email')
         form.username.data = session.get('forget_username')
         return render_template(
@@ -127,7 +133,7 @@ def set_password():
         username = session.get('forget_username')
         email = session.get('forget_email')
         if mongo.db.user.find_one({'username':username,'email':email}) is None:
-            flash(u'没有这个用户！')
+            flash('没有这个用户！')
             return redirect('.validate_user')
         if request.method == 'POST' and form.validate_on_submit():
             mongo.db.user.update(
@@ -139,7 +145,7 @@ def set_password():
             session.pop('forget_email',None)
             session.pop('forget_username',None)
             session.pop('set_password',None)
-            flash(u'您已设置新密码！！')
+            flash('您已设置新密码！！')
             return redirect(url_for('auth.login'))
         action = url_for('auth.set_password')
         return render_template('profile/edit_password.html',action=action,form=form)
