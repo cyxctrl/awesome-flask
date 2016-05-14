@@ -1,5 +1,5 @@
 {% extends "base_logged_in.html" %}
-
+{% block title %}我的资料页{% endblock %}
 {% block content %}
 
 {% if user['username'] == current_user.username %}
@@ -27,11 +27,11 @@
     {% if user.following[0] %}
     <div class="row">
         {% for u in user.following %}
-        <div class="col-md-3">
-            <div class="col-md-3">
+        <div class="col-md-3 col-sm-3">
+            <div class="col-md-3 col-sm-3">
                 <p><a href="{{ url_for('profile.user',username=u) }}" target="_blank">{{ u }}</a></p>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-9 col-sm-9">
                 <p><a href="{{ url_for('profile.unfollow',username=u) }}" class="btn btn-default">取消关注</a></p>
             </div>
         </div>

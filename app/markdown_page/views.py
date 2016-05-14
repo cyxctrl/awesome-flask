@@ -23,7 +23,7 @@ def markdown_update():
         mongo.db.markdown.update({'_id':markdown_id},{'text':text})
         flash('保存成功！')
     else:
-        flash('请先登录！')
+        flash('登录之后才能保存Markdown文本！')
     return redirect(url_for('markdown_page.markdown'))
 
 @markdown_page.route('/markdown/introduction')

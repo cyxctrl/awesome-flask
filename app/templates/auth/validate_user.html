@@ -1,5 +1,5 @@
 {% extends "base_logged_in.html" %}
-
+{% block title %}账户验证{% endblock %}
 {% block content %}
 <h1>账户验证</h1>
 <form role="form" action="{{ url_for('auth.validate_user') }}" method="post">

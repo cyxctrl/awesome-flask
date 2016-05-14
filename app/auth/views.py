@@ -6,12 +6,13 @@ from .. import mongo
 from ..models import User, CurrentUser
 from ..forms import LoginForm, RegisterForm, ValidateUserForm, ValidatePasswordQuestionsForm, EditPasswordForm
 import datetime
+import random
 from flask.ext.login import login_user, logout_user
 
 text = 'Life is short, and you need Python.'
 
-def backgroundPicture(timestamp):
-    name = int(timestamp % 10)
+def backgroundPicture(num):
+    name = int(num * 10)
     bgname = str(name) + '.jpg'
     return bgname
 
@@ -40,7 +41,7 @@ def register():
                 )
         flash('注册成功！')
         return redirect(url_for('auth.login'))
-    bgname = backgroundPicture(datetime.datetime.utcnow().timestamp())
+    bgname = backgroundPicture(random.random())
     return render_template('auth/register.html',form=form,bgname=bgname,text=text)
 
 @auth.route('/login',methods=['GET','POST'])
@@ -70,14 +71,14 @@ def login():
             login_user(user_obj,form.remember_me.data)
             return redirect(request.args.get('next') or url_for('profile.user',username=user['username']))
         flash('错误或不存在的邮箱、用户名和密码。')
-    bgname = backgroundPicture(datetime.datetime.utcnow().timestamp())
+    bgname = backgroundPicture(random.random())
     return render_template('auth/login.html',form=form,bgname=bgname,text=text)
 
 @auth.route('/logout')
 def logout():
     logout_user()
     flash('注销成功！')
-    bgname = backgroundPicture(datetime.datetime.utcnow().timestamp())
+    bgname = backgroundPicture(random.random())
     return render_template('home/index.html',bgname=bgname,text=text)
 
 @auth.route('/validate-user',methods=['GET','POST'])

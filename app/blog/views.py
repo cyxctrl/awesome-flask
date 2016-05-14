@@ -55,7 +55,7 @@ def article_add():
         )
         blog_id = blog.save(username)
         return redirect(url_for('.article',blog_id=blog_id))
-    form.submit.label.text = '增加'
+    form.submit.label.text = '添加'
     return render_template('blog/article_edit.html',form=form)
 
 @blog.route('/article-modify/<string:blog_id>',methods=['GET','POST'])

@@ -19,7 +19,8 @@ def user(username):
             bg = mongo.db.blog.find_one(bid)
             if bg['permission'] == 'public':
                 blog_list.append(bg)
-        return render_template('profile/user.html',user=user,blog_list=blog_list[::-1])
+        blog_list = sorted(blog_list,key=lambda e:e['last_modify_time'],reverse=True)
+        return render_template('profile/user.html',user=user,blog_list=blog_list)
 
 @profile.route('/follow/<username>')
 @login_required

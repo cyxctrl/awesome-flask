@@ -1,9 +1,7 @@
 {% extends 'base_logged_in.html' %}
+{% block title %}我的待办事项{% endblock %}
 {% block content %}
-
-<h1 class="text-center text-danger">{{ current_user.username }}的待办事项</h1>
-
-
+<h1 class="text-center text-danger">{{ current_user.username }} - 待办事项</h1>
 <form class="input-group" action="{{ action }}" method="post">
     {{ form.hidden_tag() }}
     {{ form.content(class="form-control",placeholder=form.content.label.text) }}
@@ -26,9 +24,9 @@
             {% for todo in todo_list %}
             <tr>
                 {% if todo['status'] == 0 %}
-                <td style="width: 15%">{{ todo['content'] }}</td>
-                <td style="width: 15%">{{ momentjs(todo['create_time']).format('YYYY-MM-DD HH:mm') }}</td>
-                <td style="width: 15%">
+                <td style="width: 10%">{{ todo['content'] }}</td>
+                <td style="width: 10%">{{ momentjs(todo['create_time']).format('YYYY-MM-DD HH:mm') }}</td>
+                <td style="width: 10%">
                 <a href="{{ url_for('todo.todo_undo',todo_id=todo['_id']) }}" class="btn btn-primary">还没做</a>
                 <a href="{{ url_for('todo.todo_delete',todo_id=todo['_id']) }}" class="btn btn-danger">删除</a>
                 </td>

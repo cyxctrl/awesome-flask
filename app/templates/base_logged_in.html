@@ -11,7 +11,7 @@
     <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static',filename='js/moment.js') }}"></script>
     {% block head %}{% endblock %}
-    <title></title>
+    <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
     <div class="navbar navbar-inverse" role="navigation">

@@ -1,14 +1,16 @@
 {% extends "base_logged_in.html" %}
-
+{% block title %}{{ user['username'] }} - 资料{% endblock %}
 {% block content %}
 <div class="page-header">
 <h1>
     <p>{{ user['username'] }}
+    {% if current_user.is_authenticated %}
         {% if user['username'] in current_user.following %}
         <a href="{{ url_for('profile.unfollow',username=user['username']) }}" class="btn btn-default">取消关注</a>
         {% else %}
         <a href="{{ url_for('profile.follow',username=user['username']) }}" class="btn btn-success">关注</a>
         {% endif %}
+    {% endif %}
     </p>
 </h1>
 </div>
@@ -22,12 +24,12 @@
     <p>{{ user.about_me }}</p>
 </blockquote>
 
-<h3><a data-toggle="collapse" href="#following" aria-expanded="false">关注列表</a></h3>
+<h3><a data-toggle="collapse" href="#following" aria-expanded="false">关注列表<b class="caret"></b></a></h3>
 <div class="collapse" id="following">
     {% if user.following[0] %}
     <div class="row">
         {% for u in user.following %}
-        <div class="col-md-1">
+        <div class="col-md-1 col-sm-1">
             <p class="text-center"><a href="{{ url_for('profile.user',username=u) }}">{{ u }}</a></p>
         </div>
         {% endfor %}
@@ -37,7 +39,7 @@
     {% endif %}
 </div>
 <h3>
-    文章列表
+    最新文章
     {% if blog_list[1] %}
     <small class="text-right"><a data-toggle="collapse" href="#article" aria-expanded="false">查看更多<b class="caret"></b></a></small>
     {% endif %}
@@ -53,7 +55,7 @@
     <hr />
     <h4><a href="{{ url_for('blog.article',blog_id=blog['_id']) }}" target="_blank">{{ blog['title'] }}</a></h4>
     <p>{{ momentjs(blog['create_time']).format('YYYY-MM-DD HH:mm') }}</p>
-    <p>{{ blog['article'] | truncate(100) }}</p>
+    <p>{{ blog['article'] | truncate(150) }}</p>
     {% endif %}
 {% endfor %}
 {% else %}

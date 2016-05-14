@@ -11,7 +11,7 @@
     <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
     {% block head %}
     {% endblock %}
-    <title></title>
+    <title>{% block title %}{% endblock %} - 欢迎来到py的世界</title>
 </head>
 <body background="static/background/{{ bgname }}">
     <div class="container" style="height: 100%">

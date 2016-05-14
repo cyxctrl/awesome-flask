@@ -3,7 +3,6 @@
 from flask.ext.script import Manager
 from app import create_app, mongo
 
-
 app = create_app('default')
 manager = Manager(app)
 
