@@ -5,16 +5,10 @@ from . import auth
 from .. import mongo
 from ..models import User, CurrentUser
 from ..forms import LoginForm, RegisterForm, ValidateUserForm, ValidatePasswordQuestionsForm, EditPasswordForm
+from ..methods import backgroundPicture, text
+from flask.ext.login import login_user, logout_user
 import datetime
 import random
-from flask.ext.login import login_user, logout_user
-
-text = 'Life is short, and you need Python.'
-
-def backgroundPicture(num):
-    name = int(num * 10)
-    bgname = str(name) + '.jpg'
-    return bgname
 
 @auth.route('/register',methods=['GET','POST'])
 def register():
@@ -56,14 +50,14 @@ def login():
             user = mongo.db.user.find_one({'username':username_login})
         if user is not None and check_password_hash(user['password'],password_login):
             user_obj = CurrentUser(
-                                username    = user['username'],
-                                email       = user['email'],
-                                permission  = user['permission'],
-                                blogs_id    = user['blogs_id'],
-                                todos_id    = user['todos_id'],
-                                markdown_id = user['markdown_id'],
-                                following   = user['following']
-                                )
+                username    = user['username'],
+                email       = user['email'],
+                permission  = user['permission'],
+                blogs_id    = user['blogs_id'],
+                todos_id    = user['todos_id'],
+                markdown_id = user['markdown_id'],
+                following   = user['following']
+                )
             mongo.db.user.update(
                 {'username':user_obj.username},
                 {'$set':{'last_login_time':datetime.datetime.utcnow()}}

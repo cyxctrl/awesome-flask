@@ -3,7 +3,7 @@ from flask import render_template, redirect, url_for, session, flash
 from . import home
 from ..forms import PageDownForm
 from flask.ext.login import current_user
-from ..auth.views import backgroundPicture, text
+from ..methods import backgroundPicture, text
 import random
 
 @home.app_errorhandler(404)

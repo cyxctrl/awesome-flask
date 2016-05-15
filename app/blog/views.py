@@ -54,6 +54,7 @@ def article_add():
             last_modify_time = datetime.datetime.utcnow()
         )
         blog_id = blog.save(username)
+        flash('文章添加成功！')
         return redirect(url_for('.article',blog_id=blog_id))
     form.submit.label.text = '添加'
     return render_template('blog/article_edit.html',form=form)
@@ -79,32 +80,12 @@ def article_modify(blog_id):
                 }
             }
         )
+        flash('文章修改成功！')
         return redirect(url_for('.article',blog_id=blog_id))
     blog = mongo.db.blog.find_one({'_id':bson.ObjectId(blog_id)})
     form.title.data = blog['title']
     form.submit.label.text = '修改'
     return render_template('blog/article_edit.html',form=form,blog=blog)
-
-@blog.route('/blogs/modify/<string:blog_id>',methods=['POST'])
-@login_required
-def blog_modify(blog_id):
-    username         = current_user.username
-    title            = request.form['title']
-    article          = request.form['article']
-    permission = request.form['permission']
-    last_modify_time = datetime.datetime.utcnow()
-    mongo.db.blog.update(
-        {'_id':bson.ObjectId(blog_id)},
-        {'$set':
-            {
-                'title':title,
-                'article':article,
-                'permission':permission,
-                'last_modify_time':last_modify_time
-            }
-        }
-    )
-    return redirect(url_for('.blogs',username=username))
 
 @blog.route('/blogs/delete/<string:blog_id>')
 @login_required
@@ -117,6 +98,7 @@ def blog_delete(blog_id):
             {'blogs_id':bson.ObjectId(blog_id)}
         }
     )
+    flash('文章删除成功！')
     return redirect(url_for('.blogs'))
 
 @blog.route('/article/<string:blog_id>/add_comment',methods=['POST'])

@@ -58,5 +58,6 @@ def todo_delete(todo_id):
             {'todos_id':bson.ObjectId(todo_id)}
         }
     )
+    flash('待办事项删除成功！')
     return redirect(url_for('.todos'))
 
