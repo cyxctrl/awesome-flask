@@ -2,7 +2,7 @@
 from flask import render_template, redirect, session, url_for, abort, request, flash
 from . import profile
 from .. import mongo
-from ..forms import EditProfileForm, ValidatePasswordForm, EditPasswordForm, EditPasswordQuestionsForm
+from ..forms import EditProfileForm, ValidatePasswordForm, EditPasswordForm, EditPasswordQuestionsForm, ValidateUserForm, ValidatePasswordQuestionsForm
 from flask.ext.login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -188,5 +188,77 @@ def delete_user():
         session.pop('delete_user',None)
         flash('账户删除成功！')
         return redirect(url_for('home.index'))
+    else:
+        abort(404)
+
+@profile.route('/validate-user',methods=['GET','POST'])
+def validate_user():
+    form = ValidateUserForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        email = form.email.data
+        username = form.username.data
+        user = mongo.db.user.find_one({'email':email,'username':username})
+        if user is not None:
+            session['forget_email'] = email
+            session['forget_username'] = username
+            return redirect(url_for('.validate_password_questions'))
+        else:
+            flash('没有这个用户！')
+    return render_template('profile/validate_user.html',form=form)
+
+@profile.route('/validate-password-questions',methods=['GET','POST'])
+def validate_password_questions():
+    if session.get('forget_email') is None or session.get('forget_username') is None:
+        abort(404)
+    else:
+        form = ValidatePasswordQuestionsForm()
+        email = session.get('forget_email')
+        username = session.get('forget_username')
+        user = mongo.db.user.find_one({'email':email,'username':username})
+        if user is None:
+            flash('没有这个用户！')
+            return redirect('.validate_user')
+        if user['password_questions']:
+            question1 = user['password_questions'][0]
+            question2 = user['password_questions'][2]
+        else:
+            flash('你还没有设置密保问题，请联系管理员进行密码找回！')
+            return redirect(url_for('auth.login'))
+        if request.method == 'POST' and form.validate_on_submit():
+            answer1 = user['password_questions'][1]
+            answer2 = user['password_questions'][3]
+            if form.answer1.data == answer1 and form.answer2.data == answer2:
+                session['set_password'] = True
+                return redirect(url_for('.set_password'))
+            else:
+                flash('无法通过密保问题验证！')
+        form.email.data = session.get('forget_email')
+        form.username.data = session.get('forget_username')
+        return render_template(
+            'profile/validate_password_questions.html',form=form,question1=question1,question2=question2)
+
+@profile.route('/set-password',methods=['GET','POST'])
+def set_password():
+    form = EditPasswordForm()
+    if session.get('forget_email') and session.get('forget_username') and session.get('set_password'):
+        username = session.get('forget_username')
+        email = session.get('forget_email')
+        if mongo.db.user.find_one({'username':username,'email':email}) is None:
+            flash('没有这个用户！')
+            return redirect('.validate_user')
+        if request.method == 'POST' and form.validate_on_submit():
+            mongo.db.user.update(
+                {'username':username,'email':email},
+                {'$set':
+                    {'password':generate_password_hash(form.password.data)}
+                }
+            )
+            session.pop('forget_email',None)
+            session.pop('forget_username',None)
+            session.pop('set_password',None)
+            flash('您已设置新密码！！')
+            return redirect(url_for('auth.login'))
+        action = url_for('profile.set_password')
+        return render_template('profile/edit_password.html',action=action,form=form)
     else:
         abort(404)

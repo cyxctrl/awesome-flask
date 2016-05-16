@@ -15,7 +15,7 @@ pagedown = PageDown()
 login_manager = LoginManager()
 login_manager.session_protection = 'basic'
 login_manager.login_view = 'auth.login'
-login_manager.login_message = '请登陆后再操作。'
+login_manager.login_message = '请登录后再操作。'
 
 def create_app(config_name):
     app = Flask(__name__)

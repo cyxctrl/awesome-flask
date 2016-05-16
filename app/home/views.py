@@ -18,5 +18,5 @@ def internal_server_error(e):
 def index():
     if current_user.is_authenticated:
         return redirect(url_for('profile.user',username=current_user.username))
-    bgname = backgroundPicture(random.random())
+    bgname = backgroundPicture()
     return render_template('home/index.html',bgname=bgname,text=text)
