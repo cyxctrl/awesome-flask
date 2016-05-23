@@ -15,8 +15,8 @@ def todos():
     username = current_user.username
     if request.method == 'POST' and form.validate_on_submit():
         todo = Todo(
-            content = request.form.get('content'),
-            create_time=datetime.datetime.utcnow())
+            content = form.content.data,
+            create_time = datetime.datetime.utcnow())
         todo.save(username)
         return redirect(url_for('.todos'))
     todos_id = mongo.db.user.find_one({'username':username})['todos_id']
@@ -24,8 +24,7 @@ def todos():
     for tid in todos_id:
         td = mongo.db.todo.find_one(tid)
         todo_list.append(td)
-    action = url_for('todo.todos')
-    return render_template('todo/todos.html',form=form,todo_list=todo_list[::-1],action=action)
+    return render_template('todo/todos.html',form=form,todo_list=todo_list[::-1],username=username)
 
 @todo.route('/todos/undo/<string:todo_id>')
 @login_required

@@ -1,8 +1,9 @@
 {% extends 'base_logged_in.html' %}
 {% block title %}我的待办事项{% endblock %}
+
 {% block content %}
-<h1 class="text-center text-danger">{{ current_user.username }} - 待办事项</h1>
-<form class="input-group" action="{{ action }}" method="post">
+<h1 class="text-center text-danger">{{ username }} - 待办事项</h1>
+<form class="input-group" action="{{ url_for('todo.todos') }}" method="post">
     {{ form.hidden_tag() }}
     {{ form.content(class="form-control",placeholder=form.content.label.text) }}
     <span class="input-group-btn">

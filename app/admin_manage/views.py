@@ -3,17 +3,49 @@ from flask import request, render_template, flash, redirect, session, url_for, a
 from werkzeug.security import generate_password_hash
 from . import admin_manage
 from .. import mongo
-from ..forms import AdminManageProfileForm
+from ..models import Blog, Todo
+from ..forms import FindUserForm, AdminManageProfileForm, TodoForm
 import datetime
 from flask.ext.login import login_user, logout_user, login_required, current_user
 
-@admin_manage.route('/admin-manage/<username>/profile',methods=['GET','POST'])
+@admin_manage.route('/admin-manage/find-user',methods=['GET','POST'])
 @login_required
-def admin_manage_profile(username):
+def find_user():
+    if current_user.permission == 9:
+        form = FindUserForm()
+        if request.method == 'POST' and form.validate_on_submit():
+            username = form.username.data
+            if '@' in username:
+                user = mongo.db.user.find_one({'email':username})
+            else:
+                user = mongo.db.user.find_one({'username':username})
+            if user is not None:
+                return redirect(url_for('.user',username=user['username']))
+            else:
+                flash('找不到这个用户！')
+        return render_template('admin_manage/find_user.html',form=form)
+    else:
+        abort(404)
+
+@admin_manage.route('/admin-manage/<username>')
+@login_required
+def user(username):
     if current_user.permission == 9:
         user = mongo.db.user.find_one({'username':username})
         if user is None:
-            return abort(404)
+            return redirect(url_for('.find_user'))
+        else:
+            return render_template('admin_manage/user.html',username=username)
+    else:
+        abort(404)
+
+@admin_manage.route('/admin-manage/<username>/profile',methods=['GET','POST'])
+@login_required
+def profile(username):
+    if current_user.permission == 9:
+        user = mongo.db.user.find_one({'username':username})
+        if user is None:
+            return redirect(url_for('.find_user'))
         form = AdminManageProfileForm()
         if request.method == 'POST' and form.validate_on_submit():
             new_username = form.username.data
@@ -43,7 +75,7 @@ def admin_manage_profile(username):
                 }
             )
             flash('信息更新成功！')
-            return redirect(url_for('admin_manage.admin_manage_profile',username=new_username))
+            return redirect(url_for('admin_manage.profile',username=new_username))
         form.username.data = user['username']
         form.email.data = user['email']
         if user['password_questions']:
@@ -57,7 +89,7 @@ def admin_manage_profile(username):
         form.location.data = user['location']
         form.about_me.data = user['about_me']
         session['delete_user'] = True
-        return render_template('admin_manage/admin_manage_profile.html',form=form,username=user['username'])
+        return render_template('admin_manage/profile.html',form=form,username=user['username'])
     else:
         abort(404)
 
@@ -75,7 +107,6 @@ def delete_user(username):
         mongo.db.markdown.find_one_and_delete({'_id':markdown_id})
         mongo.db.user.remove({'username':username})
         flash('账户删除成功！')
-        return redirect(url_for('home.index'))
+        return redirect(url_for('.find_user'))
     else:
         abort(404)
-

@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-from flask import render_template, request, redirect, url_for, session, flash
+from flask import render_template, request, redirect, url_for, session, flash, abort
 from . import blog
 from .. import mongo
 from ..models import Blog, Comment

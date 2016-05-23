@@ -159,6 +159,12 @@ class TodoForm(Form):
 
     submit = SubmitField('增加')
 
+class FindUserForm(Form):
+    username = StringField('用户名或邮箱',validators=[
+        DataRequired(message='请填写用户名或邮箱')
+        ])
+    submit = SubmitField('查找')
+
 class AdminManageProfileForm(Form):
     username = StringField('用户名',validators=[
         DataRequired(message='请填写用户名')

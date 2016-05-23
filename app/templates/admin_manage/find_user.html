@@ -1,0 +1,30 @@
+{% extends "base_logged_in.html" %}
+
+{% block content %}
+<form action="{{ url_for('admin_manage.find_user') }}" method="post">
+    <div class="form-group">
+        {{ form.hidden_tag() }}
+    </div>
+
+    {% if form.username.errors %}
+    <div class="form-group has-error">
+        <label>* 用户名或邮箱</label>
+        {{ form.username(class="form-control",placeholder=form.username.label.text) }}
+        <p class="text-danger">
+        {% for error in form.username.errors %}
+            {{ error }}
+        {% endfor %}
+        </p>
+    </div>
+    {% else %}
+    <div class="form-group">
+        <label>* 用户名或邮箱</label>
+        {{ form.username(class="form-control",placeholder=form.username.label.text) }}
+    </div>
+    {% endif %}
+
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary form-control") }}
+    </div>
+</form>
+{% endblock %}
