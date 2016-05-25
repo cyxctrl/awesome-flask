@@ -1,9 +1,7 @@
 {% extends "base_logged_in.html" %}
 {% block title %}{{ user['username'] }} - 资料{% endblock %}
 {% block content %}
-<div class="page-header">
-<h1>
-    <p>{{ user['username'] }}
+<h2>{{ user['username'] }}
     {% if current_user.is_authenticated %}
         {% if user['username'] in current_user.following %}
         <a href="{{ url_for('profile.unfollow',username=user['username']) }}" class="btn btn-default">取消关注</a>
@@ -11,20 +9,17 @@
         <a href="{{ url_for('profile.follow',username=user['username']) }}" class="btn btn-success">关注</a>
         {% endif %}
     {% endif %}
-    </p>
-</h1>
-</div>
-
+</h2>
 {% if user.location %}
     <p>位置 <a href="http://ditu.amap.com/search?query={{ user.location }}" target="_blank">{{ user.location }}</a></p>
 {% endif %}
 
-<h3>个人简介</h3>
+<h5>个人简介</h5>
 <blockquote>
     <p>{{ user.about_me }}</p>
 </blockquote>
 
-<h3><a data-toggle="collapse" href="#following" aria-expanded="false">关注列表<b class="caret"></b></a></h3>
+<h5><a data-toggle="collapse" href="#following" aria-expanded="false">关注列表<b class="caret"></b></a></h5>
 <div class="collapse" id="following">
     {% if user.following[0] %}
     <div class="row">
@@ -38,12 +33,12 @@
     <p>还没有关注任何人。</p>
     {% endif %}
 </div>
-<h3>
+<h5>
     最新文章
     {% if blog_list[1] %}
     <small class="text-right"><a data-toggle="collapse" href="#article" aria-expanded="false">查看更多<b class="caret"></b></a></small>
     {% endif %}
-</h3>
+</h5>
 {% if blog_list[0] %}
 <hr />
 <h4><a href="{{ url_for('blog.article',blog_id=blog_list[0]['_id']) }}" target="_blank">{{ blog_list[0]['title'] }}</a></h4>

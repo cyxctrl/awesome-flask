@@ -2,22 +2,18 @@
 {% block title %}我的文章{% endblock %}
 {% block content %}
 
-<h1 class="text-center text-danger">{{ current_user.username }} - 文章</h1>
-<h4><a href="{{ url_for('blog.article_add') }}">+ 添加文章 +</a></h4>
+<h2 class="text-center text-danger">{{ current_user.username }} - 文章</h2>
+<h6><a href="{{ url_for('blog.article_add') }}">+ 添加文章 +</a></h6>
 {% if blog_list[0] %}
 {% for blog in blog_list %}
 <div class="row">
     <hr />
     <div class="col-md-10 col-sm-10">
-        <h2>{{ blog['title'] }}</h2>
-        <p>创建时间：{{ momentjs(blog['create_time']).format('YYYY-MM-DD HH:mm') }}</p>
-        <p>修改时间：{{ momentjs(blog['last_modify_time']).format('YYYY-MM-DD HH:mm') }}</p>
+        <h4>{{ blog['title'] }}</h4>
+        <p><span class="fui-plus-circle"></span>创建时间：{{ momentjs(blog['create_time']).format('YYYY-MM-DD HH:mm') }} <span class="fui-gear"></span>修改时间：{{ momentjs(blog['last_modify_time']).format('YYYY-MM-DD HH:mm') }}</p>
         <p>{{ blog['article'] | truncate(150) }}</p>
     </div>
     <div class="col-md-2 col-sm-2">
-        <p><a href="{{ url_for('blog.article',blog_id=blog['_id']) }}" class="btn btn-primary form-control">查看</a></p>
-        <p><a href="{{ url_for('blog.article_modify',blog_id=blog['_id']) }}" class="btn btn-success form-control">修改</a></p>
-        <p><a href="{{ url_for('blog.blog_delete',blog_id=blog['_id']) }}" class="btn btn-danger form-control">删除</a></p>
         <p class="text-center">是否公开：
         {% if blog['permission'] == 'public' %}
         是
@@ -25,10 +21,13 @@
         否
         {% endif%}
         </p>
+        <p><a href="{{ url_for('blog.article',blog_id=blog['_id']) }}" class="btn btn-info form-control">查看</a></p>
+        <p><a href="{{ url_for('blog.article_modify',blog_id=blog['_id']) }}" class="btn btn-success form-control">修改</a></p>
+        <p><a href="{{ url_for('blog.blog_delete',blog_id=blog['_id']) }}" class="btn btn-danger form-control">删除</a></p>
     </div>
 </div>
 {% endfor %}
 {% else %}
-<h3 class="text-info">还没有文章，请添加。</h3>
+<h6 class="text-info">还没有文章，请添加。</h6>
 {% endif %}
 {% endblock %}

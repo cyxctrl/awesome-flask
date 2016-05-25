@@ -1,7 +1,7 @@
 {% extends "base_logged_in.html" %}
 
 {% block content %}
-<h1>编辑资料 - 管理员</h1>
+<h5>管理员编辑资料</h5>
 <form role="form" action="{{ url_for('admin_manage.profile',username=form.username.data) }}" method="post">
     <div class="form-group">
         {{ form.hidden_tag() }}

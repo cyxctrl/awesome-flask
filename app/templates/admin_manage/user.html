@@ -1,7 +1,7 @@
 {% extends "base_logged_in.html" %}
 
 {% block content %}
-<h1>对象用户：{{ username }}</h1>
+<h6>对象用户：{{ username }}</h6>
 <p><a href="{{ url_for('admin_manage.profile',username=username) }}" class="btn btn-primary">修改资料</a></p>
 
 {% endblock %}

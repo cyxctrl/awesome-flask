@@ -1,7 +1,7 @@
 {% extends "base_logged_in.html" %}
 {% block title %}账户验证{% endblock %}
 {% block content %}
-<h1>账户验证</h1>
+<h3>账户验证</h3>
 <form role="form" action="{{ url_for('profile.validate_user') }}" method="post">
     <div class="form-group">
         {{ form.hidden_tag() }}

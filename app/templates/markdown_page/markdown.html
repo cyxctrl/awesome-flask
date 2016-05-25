@@ -7,14 +7,14 @@
 {% endblock %}
 
 {% block content %}
-<h2>原生Markdown在线编辑器</h2>
+<h4>原生Markdown在线编辑器</h4>
 <p><a href="{{ url_for('markdown_page.markdown_introduction') }}" target="_blank">Markdown简明使用指南</a></p>
 <div class="row">
     <div class="col-md-6 col-sm-6">
-        <h3 class="text-center">编辑</h3>
+        <h6 class="text-center">编辑</h6>
     </div>
     <div class="col-md-6 col-sm-6">
-        <h3 class="text-center">预览</h3>
+        <h6 class="text-center">预览</h6>
     </div>
 </div>
 <form action="{{ url_for('markdown_page.markdown_update') }}" method="post" role="form">

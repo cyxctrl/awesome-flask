@@ -6,12 +6,16 @@
 
 {% block content %}
 
-<h1>{{ blog['title'] }}</h1>
-<h4>created by <a href="{{ url_for('profile.user',username=blog['author']) }}" target="_blank" "><em>{{ blog['author'] }}</em></a></h4>
+<h2>{{ blog['title'] }}</h2>
 <p>
-    文章创建时间：{{ momentjs(blog['create_time']).format('YYYY-MM-DD HH:mm') }}
-    上次修改时间：{{ momentjs(blog['last_modify_time']).format('YYYY-MM-DD HH:mm') }}
-    文章权限：<span class="text-warning">{% if blog['permission'] =='public' %}公开{% else %}不公开{% endif %}</span>
+    <span class="fui-user"></span> 作者 <a href="{{ url_for('profile.user',username=blog['author']) }}" target="_blank" ">{{ blog['author'] }}</a>
+</p>
+<p>
+    <span class="fui-plus-circle"></span> 文章创建时间 {{ momentjs(blog['create_time']).format('YYYY-MM-DD HH:mm') }}&nbsp;
+    <span class="fui-gear"></span> 上次修改时间 {{ momentjs(blog['last_modify_time']).format('YYYY-MM-DD HH:mm') }}
+    <span class="text-warning">
+        <span class="fui-alert-circle"></span> {% if blog['permission'] =='public' %}公开{% else %}不公开{% endif %}
+    </span>
 </p>
 
 {% if current_user.is_authenticated and current_user.username == blog['author'] %}
@@ -23,38 +27,38 @@
     {{ blog['article']|safe }}
 </div>
 <hr />
-<h3>评论区</h3>
+<h5>评论区</h5>
 {% if comment_list[0] %}
 <div class="row">
     {% for comment in comment_list %}
     <div class="col-md-6 col-sm-6">
-        <h4>评论：{{ blog['title'] }}</h4>
+        <h6>评论给：{{ blog['title'] }}</h6>
         <p>
-            <a href="{{ url_for('profile.user',username=comment['author']) }}" target="_blank">{{ comment['author'] }}</a>
+            <a href="{{ url_for('profile.user',username=comment['author']) }}" target="_blank"><span class="fui-user"></span> {{ comment['author'] }}</a>
             {{ momentjs(comment['create_time']).format('YYYY-MM-DD HH:mm') }}
         </p>
         <p>{{ comment['content'] | safe }}</p>
         {% if current_user.is_authenticated and current_user.username == blog['author'] %}
-        <a href="{{ url_for('blog.blog_del_comment',blog_id=blog['_id'],comment_id=comment['_id']) }}" class="text-danger">- 删除评论 -</a>
+        <a href="{{ url_for('blog.blog_del_comment',blog_id=blog['_id'],comment_id=comment['_id']) }}" class="text-danger"><span class="fui-cross-circle"></span>删除评论</a>
         {% elif current_user.is_authenticated and current_user.username == comment['author'] %}
-        <a href="{{ url_for('blog.blog_del_comment',blog_id=blog['_id'],comment_id=comment['_id']) }}" class="text-danger">- 删除评论 -</a>
+        <a href="{{ url_for('blog.blog_del_comment',blog_id=blog['_id'],comment_id=comment['_id']) }}" class="text-danger"><span class="fui-cross-circle"></span>删除评论</a>
         {% endif %}
         <hr />
     </div>
     {% endfor %}
 </div>
 {% else %}
-<h5>- 暂无评论</h5>
+<h6>- 暂无评论</h6>
 {% endif %}
 
 {% if current_user.is_authenticated %}
-<h4>添加评论</h4>
+<h6>添加评论</h6>
 <form action="{{ url_for('blog.blog_add_comment',blog_id=blog['_id']) }}" method="post">
     <div class="form-group">
         <textarea name="content" id="editor" class="ckeditor"></textarea>
     </div>
     <div class="form-group">
-        <button type="submit" class="btn btn-default">提交</button>
+        <button type="submit" class="btn btn-primary">提交</button>
     </div>
 </form>
 {% else %}

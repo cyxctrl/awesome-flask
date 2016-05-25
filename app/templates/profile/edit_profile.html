@@ -8,7 +8,7 @@
 <div class="form-group">
     <a href="{{ url_for('profile.validate_password_delete_user') }}" class="btn btn-danger">删除账户</a>
 </div>
-<h1>修改资料</h1>
+<h3>修改资料</h3>
 <form role="form" action="{{ url_for('profile.edit_profile') }}" method="post">
     <div class="form-group">
         {{ form.hidden_tag() }}

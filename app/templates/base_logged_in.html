@@ -7,8 +7,9 @@
     <link rel="shortcut icon" href={{ url_for('static', filename='favicon.ico') }} type="image/x-icon">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href={{ url_for('static',filename='css/bootstrap.min.css') }}>
+    <link rel="stylesheet" href={{ url_for('static',filename='css/flat-ui.min.css') }}>
     <script src="{{ url_for('static',filename='js/jquery-1.12.0.js') }}"></script>
-    <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/flat-ui.min.js') }}"></script>
     <script src="{{ url_for('static',filename='js/moment.js') }}"></script>
     {% block head %}{% endblock %}
     <title>{% block title %}{% endblock %}</title>
@@ -45,7 +46,7 @@
                             <li><a href="{{ url_for('profile.edit_profile') }}">修改资料</a></li>
                             <li><a href="{{ url_for('profile.validate_password_edit_password') }}">修改密码</a></li>
                             <li><a href="{{ url_for('profile.validate_password_edit_password_questions') }}">修改密保</a></li>
-                            <li role="separator" class="divider"></li>
+                            <li class="divider"></li>
                             <li><a href="{{ url_for('auth.logout') }}">登出账户</a></li>
                         </ul>
                     </li>

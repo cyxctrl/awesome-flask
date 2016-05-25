@@ -2,7 +2,7 @@
 {% block title %}我的待办事项{% endblock %}
 
 {% block content %}
-<h1 class="text-center text-danger">{{ username }} - 待办事项</h1>
+<h2 class="text-center text-danger">{{ username }} - 待办事项</h2>
 <form class="input-group" action="{{ url_for('todo.todos') }}" method="post">
     {{ form.hidden_tag() }}
     {{ form.content(class="form-control",placeholder=form.content.label.text) }}
@@ -28,7 +28,7 @@
                 <td style="width: 10%">{{ todo['content'] }}</td>
                 <td style="width: 10%">{{ momentjs(todo['create_time']).format('YYYY-MM-DD HH:mm') }}</td>
                 <td style="width: 10%">
-                <a href="{{ url_for('todo.todo_undo',todo_id=todo['_id']) }}" class="btn btn-primary">还没做</a>
+                <a href="{{ url_for('todo.todo_undo',todo_id=todo['_id']) }}" class="btn btn-info">还没做</a>
                 <a href="{{ url_for('todo.todo_delete',todo_id=todo['_id']) }}" class="btn btn-danger">删除</a>
                 </td>
                 {% endif %}
@@ -50,7 +50,7 @@
     </table>
 </div>
 {% else %}
-<h3 class="text-info">还没有待办事项，请添加。</h3>
+<h6 class="text-info">还没有待办事项，请添加。</h6>
 {% endif %}
 
 {% endblock %}
