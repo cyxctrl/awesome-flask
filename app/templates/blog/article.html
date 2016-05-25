@@ -14,7 +14,7 @@
     <span class="fui-plus-circle"></span> 文章创建时间 {{ momentjs(blog['create_time']).format('YYYY-MM-DD HH:mm') }}&nbsp;
     <span class="fui-gear"></span> 上次修改时间 {{ momentjs(blog['last_modify_time']).format('YYYY-MM-DD HH:mm') }}
     <span class="text-warning">
-        <span class="fui-alert-circle"></span> {% if blog['permission'] =='public' %}公开{% else %}不公开{% endif %}
+        <span class="fui-lock"></span> {% if blog['permission'] =='public' %}公开{% else %}不公开{% endif %}
     </span>
 </p>
 

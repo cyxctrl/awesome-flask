@@ -3,30 +3,46 @@
 {% block content %}
 
 <h2 class="text-center text-danger">{{ current_user.username }} - 文章</h2>
-<h6><a href="{{ url_for('blog.article_add') }}">+ 添加文章 +</a></h6>
+<h6><a href="{{ url_for('blog.article_add') }}" class="btn btn-default btn-lg">添加文章</a></h6>
 {% if blog_list[0] %}
 {% for blog in blog_list %}
-<div class="row">
-    <hr />
-    <div class="col-md-10 col-sm-10">
-        <h4>{{ blog['title'] }}</h4>
-        <p><span class="fui-plus-circle"></span>创建时间：{{ momentjs(blog['create_time']).format('YYYY-MM-DD HH:mm') }} <span class="fui-gear"></span>修改时间：{{ momentjs(blog['last_modify_time']).format('YYYY-MM-DD HH:mm') }}</p>
+<div class="thumbnail">
+    <div class="caption">
+        <h3>{{ blog['title'] }}</h3>
+        <p>
+        <span class="fui-plus-circle"></span> 创建时间 {{ momentjs(blog['create_time']).format('YYYY-MM-DD HH:mm') }}
+        <span class="fui-gear"></span> 修改时间 {{ momentjs(blog['last_modify_time']).format('YYYY-MM-DD HH:mm') }}<span class="text-warning">
+        <span class="fui-lock"></span> {% if blog['permission'] =='public' %}公开{% else %}不公开{% endif %}
+    </span></p>
         <p>{{ blog['article'] | truncate(150) }}</p>
+
     </div>
-    <div class="col-md-2 col-sm-2">
-        <p class="text-center">是否公开：
-        {% if blog['permission'] == 'public' %}
-        是
-        {% else %}
-        否
-        {% endif%}
+    <div class="caption">
+        <p>
+            <a href="{{ url_for('blog.article',blog_id=blog['_id']) }}" class="btn btn-info">查看</a>
+            <a href="{{ url_for('blog.article_modify',blog_id=blog['_id']) }}" class="btn btn-success">修改</a>
+            <a href="{{ url_for('blog.blog_delete',blog_id=blog['_id']) }}" class="btn btn-danger">删除</a>
         </p>
-        <p><a href="{{ url_for('blog.article',blog_id=blog['_id']) }}" class="btn btn-info form-control">查看</a></p>
-        <p><a href="{{ url_for('blog.article_modify',blog_id=blog['_id']) }}" class="btn btn-success form-control">修改</a></p>
-        <p><a href="{{ url_for('blog.blog_delete',blog_id=blog['_id']) }}" class="btn btn-danger form-control">删除</a></p>
     </div>
 </div>
 {% endfor %}
+<div class="text-center">
+    <ul class="pagination">
+        {% if page > 1 %}
+        <li class="previous"><a href="{{ url_for('blog.blogs',page=page-1) }}" class="fui-arrow-left"></a></li>
+        {% endif %}
+        {% for i in range(blogsTotalPages) %}
+        {% if (i+1) == page %}
+        <li class="active"><a href="{{ url_for('blog.blogs',page=i+1) }}">{{ i+1 }}</a></li>
+        {% else%}
+        <li><a href="{{ url_for('blog.blogs',page=i+1) }}">{{ i+1 }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if page < blogsTotalPages %}
+        <li class="next"><a href="{{ url_for('blog.blogs',page=page+1) }}" class="fui-arrow-right"></a></li>
+        {% endif %}
+    </ul>
+</div>
 {% else %}
 <h6 class="text-info">还没有文章，请添加。</h6>
 {% endif %}

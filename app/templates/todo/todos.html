@@ -1,15 +1,19 @@
 {% extends 'base_logged_in.html' %}
 {% block title %}我的待办事项{% endblock %}
-
+{% block head %}
+<script src="{{ url_for('static',filename='js/todo.js') }}"></script>
+{% endblock %}
 {% block content %}
 <h2 class="text-center text-danger">{{ username }} - 待办事项</h2>
-<form class="input-group" action="{{ url_for('todo.todos') }}" method="post">
-    {{ form.hidden_tag() }}
-    {{ form.content(class="form-control",placeholder=form.content.label.text) }}
-    <span class="input-group-btn">
-        {{ form.submit(class="btn btn-primary") }}
-    </span>
-</form>
+<div class="form-group">
+    <form class="input-group" action="{{ url_for('todo.todos') }}" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.content(class="form-control",placeholder=form.content.label.text) }}
+        <span class="input-group-btn">
+            {{ form.submit(class="btn btn-primary") }}
+        </span>
+    </form>
+</div>
 
 {% if todo_list[0] %}
 <div class="table-responsive">
@@ -52,5 +56,4 @@
 {% else %}
 <h6 class="text-info">还没有待办事项，请添加。</h6>
 {% endif %}
-
 {% endblock %}

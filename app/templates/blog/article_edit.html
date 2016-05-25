@@ -19,11 +19,11 @@
     <div class="form-group has-error">
         <h6>*文章标题</h6>
         {{ form.title(class="form-control",placeholder=form.title.label.text,autocomplete="off") }}
-        <p class="text-danger">
+        <small class="text-danger">
         {% for error in form.title.errors %}
             {{ error }}
         {% endfor %}
-        </p>
+        </small>
     </div>
     {% else %}
     <div class="form-group">
@@ -40,19 +40,19 @@
     </div>
 
     <div class="form-group">
-        <p>默认文章权限为<em>私有</em></p>
-        <label class="radio-inline">
+        <p>默认文章权限为<span class="text-danger">私有</span></p>
+        <label class="radio radio-inline">
         {{ form.permission(type="radio",value="public") }}公开
         </label>
-        <label class="radio-inline">
+        <label class="radio radio-inline">
         {{ form.permission(type="radio",value="private",checked="checked") }}私有
         </label>
         {% if form.permission.errors %}
-        <p class="text-danger">
+        <small class="text-danger">
         {% for error in form.permission.errors %}
             {{ error }}
         {% endfor %}
-        </p>
+        </small>
         {% endif %}
     </div>
 
@@ -71,11 +71,11 @@
     <div class="form-group has-error">
         <h6>*文章标题</h6>
         {{ form.title(class="form-control",placeholder=form.title.label.text,autocomplete="off") }}
-        <p class="text-danger">
+        <small class="text-danger">
         {% for error in form.title.errors %}
             {{ error }}
         {% endfor %}
-        </p>
+        </small>
     </div>
     {% else %}
     <div class="form-group">
@@ -91,19 +91,19 @@
     </div>
 
     <div class="form-group">
-        <p>默认文章权限为私有</p>
-        <label class="radio-inline">
+        <p>默认文章权限为<span class="text-danger">私有</span></p>
+        <label class="radio radio-inline">
         {{ form.permission(type="radio",value="public") }}公开
         </label>
-        <label class="radio-inline">
+        <label class="radio radio-inline">
         {{ form.permission(type="radio",value="private",checked="checked") }}私有
         </label>
         {% if form.permission.errors %}
-        <p class="text-danger">
+        <small class="text-danger">
         {% for error in form.permission.errors %}
             {{ error }}
         {% endfor %}
-        </p>
+        </small>
         {% endif %}
     </div>
 

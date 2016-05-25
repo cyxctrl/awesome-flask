@@ -14,20 +14,20 @@
     {% endblock %}
     <title>{% block title %}{% endblock %} - 欢迎来到py的世界</title>
 </head>
-<body background="static/background/{{ bgname }}">
-    <div class="text-center">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                <div class="alert alert-danger" role="alert">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    {{ message }}
-                </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-    </div>
+<body style="background: {{ backgroundColor }}">
     <div class="container" style="height: 100%">
+        <div class="text-center">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <small>{{ message }}</small>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
         {% block content %}
         <div class="vertical-center" style="width: 50%">
             <p class="text-center" style="color: white">{{ text }}</p>

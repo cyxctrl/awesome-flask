@@ -6,7 +6,7 @@
 {% block title %}登录{% endblock %}
 {% block content %}
 {{ super() }}
-<form role="form" action="{{ url_for('auth.login') }}" method="post" >
+<form role="form" action="{{ url_for('auth.login') }}" method="post" class="login-form">
     <div class="form-group">
         {{ form.hidden_tag() }}
     </div>
@@ -15,51 +15,55 @@
         {% if form.username.errors %}
         <div class="has-error">
             {{ form.username(class="form-control",placeholder=form.username.label.text) }}
-            <p class="text-danger">
+            <label class="login-field-icon fui-user"></label>
+            <small class="text-danger">
             {% for error in form.username.errors %}
                 {{ error }}
             {% endfor %}
-            </p>
+            </small>
         </div>
         {% else %}
         <div>
             {{ form.username(class="form-control",placeholder=form.username.label.text) }}
+            <label class="login-field-icon fui-user"></label>
         </div>
         {% endif %}
-
+    </div>
+    <div class="form-group">
         {% if form.password.errors %}
         <div class="has-error">
             {{ form.password(class="form-control",placeholder=form.password.label.text) }}
-            <p class="text-danger">
+            <label class="login-field-icon fui-lock"></label>
+            <small class="text-danger">
             {% for error in form.password.errors %}
                 {{ error }}
             {% endfor %}
-            </p>
+            </small>
         </div>
         {% else %}
         <div class="form-group">
             {{ form.password(class="form-control",placeholder=form.password.label.text) }}
+            <label class="login-field-icon fui-lock"></label>
         </div>
         {% endif %}
     </div>
 
     <div class="form-group">
-        {{ form.submit(class="btn btn-info form-control") }}
+        {{ form.submit(class="btn btn-primary btn-block") }}
     </div>
 
-    <div class="checkbox">
-        <label>
-            {{ form.remember_me }} <span style="color: white">记住我</span>
+    <div>
+        <label class="checkbox">
+            {{ form.remember_me(class="custom-checkbox") }}<span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+            记住我
         </label>
-        <script type="text/javascript">
-            $(':checkbox').radiocheck();
-        </script>
     </div>
 
     <div class="form-group">
-        <a class="btn btn-inverse" href="{{ url_for('auth.register') }}" role="button">还没有账号？</a>
-        <a class="btn btn-inverse" href="{{ url_for('profile.validate_user') }}" role="button">忘记密码？</a>
+        <a class="btn btn-default" href="{{ url_for('auth.register') }}" role="button">还没有账号？</a>
+        <a class="btn btn-default" href="{{ url_for('profile.validate_user') }}" role="button">忘记密码？</a>
     </div>
 </form>
+
 </div>
 {% endblock %}

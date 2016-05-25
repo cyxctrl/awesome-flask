@@ -1,13 +1,13 @@
 #-*- coding: utf-8 -*-
 import random
 
-def backgroundPicture():
-    num = random.randint(0,9)
-    bgname = str(num) + '.jpg'
-    return bgname
+def BackgroundColor():
+    from .source import colors
+    backgroundColor = colors[random.randint(0,len(colors)-1)]
+    return backgroundColor
 
 def MakePoem():
-    from .poem import templates, words
+    from .source import templates, words
     template = templates[random.randint(0,len(templates)-1)]
     num = random.randint(0,len(words['B'])-1)
     sentenceList = []

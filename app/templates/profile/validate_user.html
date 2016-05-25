@@ -11,11 +11,11 @@
     <div class="form-group has-error">
         <label>用户名</label>
         {{ form.username(class="form-control",placeholder=form.username.label.text) }}
-        <p class="text-danger">
+        <small class="text-danger">
         {% for error in form.username.errors %}
             {{ error }}
         {% endfor %}
-        </p>
+        </small>
     {% else %}
     <div class="form-group">
         <label>用户名</label>
@@ -27,11 +27,11 @@
     <div class="form-group has-error">
         <label>邮箱</label>
         {{ form.email(class="form-control",placeholder=form.email.label.text) }}
-        <p class="text-danger">
+        <small class="text-danger">
         {% for error in form.email.errors %}
             {{ error }}
         {% endfor %}
-        </p>
+        </small>
     </div>
     {% else %}
     <div class="form-group">
@@ -41,7 +41,7 @@
     {% endif %}
 
     <div class="form-group">
-        {{ form.submit(class="btn btn-primary form-control") }}
+        {{ form.submit(class="btn btn-primary btn-block") }}
     </div>
 </form>
 

@@ -6,7 +6,7 @@
 {% block title %}注册{% endblock %}
 {% block content %}
 {{ super() }}
-<form role="form" action="{{ url_for('auth.register') }}" method="post">
+<form role="form" action="{{ url_for('auth.register') }}" method="post" class="login-form">
     <div class="form-group">
         {{ form.hidden_tag() }}
     </div>
@@ -15,70 +15,84 @@
     {% if form.username.errors %}
     <div class="has-error">
         {{ form.username(class="form-control",placeholder=form.username.label.text) }}
-        <p class="text-danger">
+        <label class="login-field-icon fui-user"></label>
+        <small class="text-danger">
         {% for error in form.username.errors %}
             {{ error }}
         {% endfor %}
-        </p>
+        </small>
     </div>
     {% else %}
     <div>
         {{ form.username(class="form-control",placeholder=form.username.label.text) }}
+        <label class="login-field-icon fui-user"></label>
     </div>
     {% endif %}
+    </div>
 
+    <div class="form-group">
     {% if form.email.errors %}
     <div class="has-error">
         {{ form.email(class="form-control",placeholder=form.email.label.text) }}
-        <p class="text-danger">
+        <label class="login-field-icon fui-mail"></label>
+        <small class="text-danger">
         {% for error in form.email.errors %}
             {{ error }}
         {% endfor %}
-        </p>
+        </small>
     </div>
     {% else %}
     <div>
         {{ form.email(class="form-control",placeholder=form.email.label.text) }}
+        <label class="login-field-icon fui-mail"></label>
     </div>
     {% endif %}
+    </div>
 
+    <div class="form-group">
     {% if form.password.errors %}
     <div class="has-error">
         {{ form.password(class="form-control",placeholder=form.password.label.text) }}
-        <p class="text-danger">
+        <label class="login-field-icon fui-lock"></label>
+        <small class="text-danger">
         {% for error in form.password.errors %}
             {{ error }}
         {% endfor %}
-        </p>
+        </small>
     </div>
     {% else %}
     <div>
         {{ form.password(class="form-control",placeholder=form.password.label.text) }}
+        <label class="login-field-icon fui-lock"></label>
     </div>
     {% endif %}
+    </div>
 
+    <div class="form-group">
     {% if form.password2.errors %}
     <div class="has-error">
         {{ form.password2(class="form-control",placeholder=form.password2.label.text) }}
-        <p class="text-danger">
+        <label class="login-field-icon fui-lock"></label>
+        <small class="text-danger">
         {% for error in form.password2.errors %}
             {{ error }}
         {% endfor %}
-        </p>
+        </small>
     </div>
     {% else %}
     <div>
         {{ form.password2(class="form-control",placeholder=form.password2.label.text) }}
+        <label class="login-field-icon fui-lock"></label>
     </div>
     {% endif %}
     </div>
 
     <div class="form-group">
-        {{ form.submit(class="btn btn-primary form-control") }}
+        {{ form.submit(class="btn btn-primary btn-block") }}
     </div>
 
     <div class="form-group">
-        <a class="btn btn-inverse" href="{{ url_for('auth.login') }}" role="button">已有账号？
+        <a class="btn btn-default" href="{{ url_for('auth.login') }}" role="button">已有账号？
         </a>
     </div>
 </form>

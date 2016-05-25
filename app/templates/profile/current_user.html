@@ -16,7 +16,7 @@
     </p></div>
     <div class="col-md-4 col-sm-4"><p><span class="fui-upload"></span> 上次登录 {{ momentjs(user.last_login_time).format('YYYY-MM-DD HH:mm') }}</p></div>
     {% if user.location %}
-    <div class="col-md-4 col-sm-4"><p><span class="fui-location"></span> <a href="http://ditu.amap.com/search?query={{ user.location }}" target="_blank">{{ user.location }}</a></p></div>
+    <div class="col-md-4 col-sm-4"><p><span class="fui-location"></span> 位置 <a href="http://ditu.amap.com/search?query={{ user.location }}" target="_blank">{{ user.location }}</a></p></div>
     {% endif %}
 </div>
 <h5>个人简介</h5>

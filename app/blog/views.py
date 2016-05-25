@@ -6,6 +6,7 @@ from ..models import Blog, Comment
 from ..forms import ArticleForm
 import bson
 import datetime
+import math
 from flask.ext.login import login_required, current_user
 
 @blog.route('/article/<string:blog_id>')
@@ -27,17 +28,19 @@ def article(blog_id):
             comment_list.append(comment)
         return render_template('blog/article.html',blog=blog,comment_list=comment_list)
 
-@blog.route('/blogs')
+@blog.route('/blogs', defaults={'page': 1})
+@blog.route('/blogs/<int:page>')
 @login_required
-def blogs():
+def blogs(page):
     username = current_user.username
     blogs_id = mongo.db.user.find_one({'username':username})['blogs_id']
     blog_list = []
     for bid in blogs_id:
         bg = mongo.db.blog.find_one(bid)
         blog_list.append(bg)
-    blog_list = sorted(blog_list,key=lambda e:e['last_modify_time'],reverse=True)
-    return render_template('blog/blogs.html',blog_list=blog_list)
+    blogsTotalPages = math.ceil(len(blog_list)/5)
+    blog_list = sorted(blog_list,key=lambda e:e['last_modify_time'],reverse=True)[(page-1)*5:page*5]
+    return render_template('blog/blogs.html',blog_list=blog_list,blogsTotalPages=blogsTotalPages,page=page)
 
 @blog.route('/article-add',methods=['GET','POST'])
 @login_required

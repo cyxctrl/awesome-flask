@@ -11,7 +11,7 @@
     {% endif %}
 </h2>
 {% if user.location %}
-    <p>位置 <a href="http://ditu.amap.com/search?query={{ user.location }}" target="_blank">{{ user.location }}</a></p>
+    <p><span class="fui-location"></span> 位置 <a href="http://ditu.amap.com/search?query={{ user.location }}" target="_blank">{{ user.location }}</a></p>
 {% endif %}
 
 <h5>个人简介</h5>

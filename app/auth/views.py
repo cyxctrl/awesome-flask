@@ -5,7 +5,7 @@ from . import auth
 from .. import mongo
 from ..models import User, CurrentUser
 from ..forms import LoginForm, RegisterForm
-from ..methods import backgroundPicture, MakePoem
+from ..methods import BackgroundColor, MakePoem
 from flask.ext.login import login_user, logout_user
 import datetime
 
@@ -34,9 +34,9 @@ def register():
                 )
         flash('注册成功！')
         return redirect(url_for('auth.login'))
-    bgname = backgroundPicture()
+    backgroundColor = BackgroundColor()
     text = MakePoem()
-    return render_template('auth/register.html',form=form,bgname=bgname,text=text)
+    return render_template('auth/register.html',form=form,backgroundColor=backgroundColor,text=text)
 
 @auth.route('/login',methods=['GET','POST'])
 def login():
@@ -65,16 +65,16 @@ def login():
             login_user(user_obj,form.remember_me.data)
             return redirect(request.args.get('next') or url_for('profile.user',username=user['username']))
         flash('错误或不存在的邮箱、用户名和密码。')
-    bgname = backgroundPicture()
+    backgroundColor = BackgroundColor()
     text = MakePoem()
-    return render_template('auth/login.html',form=form,bgname=bgname,text=text)
+    return render_template('auth/login.html',form=form,backgroundColor=backgroundColor,text=text)
 
 @auth.route('/logout')
 def logout():
     logout_user()
-    flash('注销成功！')
-    bgname = backgroundPicture()
+    backgroundColor = BackgroundColor()
     text = MakePoem()
-    return render_template('home/index.html',bgname=bgname,text=text)
+    flash('注销成功！')
+    return render_template('home/index.html',backgroundColor=backgroundColor,text=text)
 
 
