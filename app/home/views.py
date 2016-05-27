@@ -20,4 +20,5 @@ def index():
         return redirect(url_for('profile.user',username=current_user.username))
     backgroundColor = BackgroundColor()
     text = MakePoem()
-    return render_template('home/index.html',backgroundColor=backgroundColor,text=text)
+    return render_template('home/index.html',
+        backgroundColor=backgroundColor,text=text)

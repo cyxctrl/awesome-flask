@@ -24,7 +24,8 @@ def todos():
     for tid in todos_id:
         td = mongo.db.todo.find_one(tid)
         todo_list.append(td)
-    return render_template('todo/todos.html',form=form,todo_list=todo_list[::-1],username=username)
+    return render_template('todo/todos.html',
+        form=form,todo_list=todo_list[::-1],username=username)
 
 @todo.route('/todos/undo/<string:todo_id>')
 @login_required

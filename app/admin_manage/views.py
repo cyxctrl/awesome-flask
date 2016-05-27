@@ -23,7 +23,8 @@ def find_user():
                 return redirect(url_for('.user',username=user['username']))
             else:
                 flash('找不到这个用户！')
-        return render_template('admin_manage/find_user.html',form=form)
+        return render_template('admin_manage/find_user.html',
+            form=form)
     else:
         abort(404)
 
@@ -35,7 +36,8 @@ def user(username):
         if user is None:
             return redirect(url_for('.find_user'))
         else:
-            return render_template('admin_manage/user.html',username=username)
+            return render_template('admin_manage/user.html',
+                username=username)
     else:
         abort(404)
 
@@ -55,7 +57,8 @@ def profile(username):
             question2 = form.question2.data
             answer2= form.answer2.data
             permission = int(form.permission.data)
-            register_time = datetime.datetime.strptime(form.register_time.data,'%Y-%m-%d %H:%M:%S')
+            register_time = datetime.datetime.strptime(form.register_time.data,
+                '%Y-%m-%d %H:%M:%S')
             following = form.following.data.split(',')
             location = form.location.data
             about_me = form.about_me.data
@@ -89,7 +92,8 @@ def profile(username):
         form.location.data = user['location']
         form.about_me.data = user['about_me']
         session['delete_user'] = True
-        return render_template('admin_manage/profile.html',form=form,username=user['username'])
+        return render_template('admin_manage/profile.html',
+            form=form,username=user['username'])
     else:
         abort(404)
 

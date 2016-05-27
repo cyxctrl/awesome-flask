@@ -20,10 +20,10 @@ def register():
             flash('用户名已被使用。')
             return redirect(url_for('auth.register'))
         user = User(
-            email           = form.email.data,
-            username        = form.username.data,
-            password        = generate_password_hash(form.password.data),
-            register_time   = datetime.datetime.utcnow(),
+            email = form.email.data,
+            username = form.username.data,
+            password = generate_password_hash(form.password.data),
+            register_time = datetime.datetime.utcnow(),
             last_login_time = datetime.datetime.utcnow()
         )
         user.save()
@@ -36,7 +36,8 @@ def register():
         return redirect(url_for('auth.login'))
     backgroundColor = BackgroundColor()
     text = MakePoem()
-    return render_template('auth/register.html',form=form,backgroundColor=backgroundColor,text=text)
+    return render_template('auth/register.html',
+        form=form,backgroundColor=backgroundColor,text=text)
 
 @auth.route('/login',methods=['GET','POST'])
 def login():
@@ -50,13 +51,13 @@ def login():
             user = mongo.db.user.find_one({'username':username_login})
         if user is not None and check_password_hash(user['password'],password_login):
             user_obj = CurrentUser(
-                username    = user['username'],
-                email       = user['email'],
-                permission  = user['permission'],
-                blogs_id    = user['blogs_id'],
-                todos_id    = user['todos_id'],
+                username = user['username'],
+                email = user['email'],
+                permission = user['permission'],
+                blogs_id = user['blogs_id'],
+                todos_id = user['todos_id'],
                 markdown_id = user['markdown_id'],
-                following   = user['following']
+                following = user['following']
                 )
             mongo.db.user.update(
                 {'username':user_obj.username},
@@ -67,7 +68,8 @@ def login():
         flash('错误或不存在的邮箱、用户名和密码。')
     backgroundColor = BackgroundColor()
     text = MakePoem()
-    return render_template('auth/login.html',form=form,backgroundColor=backgroundColor,text=text)
+    return render_template('auth/login.html',
+        form=form,backgroundColor=backgroundColor,text=text)
 
 @auth.route('/logout')
 def logout():
@@ -75,6 +77,7 @@ def logout():
     backgroundColor = BackgroundColor()
     text = MakePoem()
     flash('注销成功！')
-    return render_template('home/index.html',backgroundColor=backgroundColor,text=text)
+    return render_template('home/index.html',
+        backgroundColor=backgroundColor,text=text)
 
 

@@ -18,7 +18,8 @@ def article(blog_id):
             for cid in blog['comments_id']:
                 comment = mongo.db.comment.find_one({'_id':cid})
                 comment_list.append(comment)
-            return render_template('blog/article.html',blog=blog,comment_list=comment_list)
+            return render_template('blog/article.html',
+                blog=blog,comment_list=comment_list)
         else:
             abort(404)
     else:
@@ -26,7 +27,8 @@ def article(blog_id):
         for cid in blog['comments_id']:
             comment = mongo.db.comment.find_one({'_id':cid})
             comment_list.append(comment)
-        return render_template('blog/article.html',blog=blog,comment_list=comment_list)
+        return render_template('blog/article.html',
+            blog=blog,comment_list=comment_list)
 
 @blog.route('/blogs', defaults={'page': 1})
 @blog.route('/blogs/<int:page>')
@@ -38,9 +40,10 @@ def blogs(page):
     for bid in blogs_id:
         bg = mongo.db.blog.find_one(bid)
         blog_list.append(bg)
-    blogsTotalPages = math.ceil(len(blog_list)/5)
+    blogsTotalPages = int(math.ceil(float(len(blog_list))/5))
     blog_list = sorted(blog_list,key=lambda e:e['last_modify_time'],reverse=True)[(page-1)*5:page*5]
-    return render_template('blog/blogs.html',blog_list=blog_list,blogsTotalPages=blogsTotalPages,page=page)
+    return render_template('blog/blogs.html',
+        blog_list=blog_list,blogsTotalPages=blogsTotalPages,page=page)
 
 @blog.route('/article-add',methods=['GET','POST'])
 @login_required
@@ -60,7 +63,8 @@ def article_add():
         flash('文章添加成功！')
         return redirect(url_for('.article',blog_id=blog_id))
     form.submit.label.text = '添加'
-    return render_template('blog/article_edit.html',form=form)
+    return render_template('blog/article_edit.html',
+        form=form)
 
 @blog.route('/article-modify/<string:blog_id>',methods=['GET','POST'])
 @login_required
@@ -88,7 +92,8 @@ def article_modify(blog_id):
     blog = mongo.db.blog.find_one({'_id':bson.ObjectId(blog_id)})
     form.title.data = blog['title']
     form.submit.label.text = '修改'
-    return render_template('blog/article_edit.html',form=form,blog=blog)
+    return render_template('blog/article_edit.html',
+        form=form,blog=blog)
 
 @blog.route('/blogs/delete/<string:blog_id>')
 @login_required
@@ -109,8 +114,8 @@ def blog_delete(blog_id):
 def blog_add_comment(blog_id):
     username = current_user.username
     comment  = Comment(
-        author      = username,
-        content     = request.form['content'],
+        author = username,
+        content = request.form['content'],
         create_time = datetime.datetime.utcnow()
     )
     comment.save(bson.ObjectId(blog_id))

@@ -49,13 +49,13 @@ class User():
 
 class CurrentUser(UserMixin):
     def __init__(self,username,email,permission,blogs_id,todos_id,markdown_id,following):
-        self.email       = email
-        self.username    = username
-        self.permission  = permission
-        self.todos_id    = todos_id
-        self.blogs_id    = blogs_id
+        self.email = email
+        self.username = username
+        self.permission = permission
+        self.todos_id = todos_id
+        self.blogs_id = blogs_id
         self.markdown_id = markdown_id
-        self.following   = following
+        self.following = following
 
     def is_authenticated(self):
         return True
@@ -75,13 +75,13 @@ def load_user(username):
     if not user:
         return None
     return CurrentUser(
-                username    = user['username'],
-                email       = user['email'],
-                permission  = user['permission'],
-                blogs_id    = user['blogs_id'],
-                todos_id    = user['todos_id'],
+                username = user['username'],
+                email = user['email'],
+                permission = user['permission'],
+                blogs_id = user['blogs_id'],
+                todos_id = user['todos_id'],
                 markdown_id = user['markdown_id'],
-                following   = user['following']
+                following = user['following']
                 )
 
 class Todo():
@@ -106,13 +106,13 @@ class Todo():
 
 class Blog():
     def __init__(self,author,title,create_time,last_modify_time,article,permission,comments_id=[]):
-        self.author           = author
-        self.title            = title
-        self.create_time      = create_time
+        self.author = author
+        self.title = title
+        self.create_time = create_time
         self.last_modify_time = last_modify_time
-        self.article          = article
+        self.article = article
         self.permission = permission
-        self.comments_id      = comments_id
+        self.comments_id = comments_id
 
     def save(self,username):
         blog_id = mongo.db.blog.save(
@@ -136,8 +136,8 @@ class Blog():
 
 class Comment():
     def __init__(self,author,content,create_time):
-        self.author      = author
-        self.content     = content
+        self.author = author
+        self.content = content
         self.create_time = create_time
 
     def save(self,blog_id):

@@ -20,7 +20,8 @@ def user(username):
             if bg['permission'] == 'public':
                 blog_list.append(bg)
         blog_list = sorted(blog_list,key=lambda e:e['last_modify_time'],reverse=True)
-        return render_template('profile/user.html',user=user,blog_list=blog_list)
+        return render_template('profile/user.html',
+            user=user,blog_list=blog_list)
 
 @profile.route('/follow/<username>')
 @login_required
@@ -70,7 +71,8 @@ def edit_profile():
     form.username.data = user['username']
     form.location.data = user['location']
     form.about_me.data = user['about_me']
-    return render_template('profile/edit_profile.html', form=form)
+    return render_template('profile/edit_profile.html',
+        form=form)
 
 @profile.route('/validate-password-ep',methods=['GET','POST'])
 @login_required
@@ -86,7 +88,8 @@ def validate_password_edit_password():
             flash('密码验证不通过！')
     action = url_for('profile.validate_password_edit_password')
     tips = '需要验证旧密码才能修改密码。'
-    return render_template('profile/validate_password.html',form=form,action=action,tips=tips)
+    return render_template('profile/validate_password.html',
+        form=form,action=action,tips=tips)
 
 @profile.route('/edit-password', methods=['GET', 'POST'])
 @login_required
@@ -103,7 +106,8 @@ def edit_password():
             session.pop('edit_password',None)
             flash('密码修改成功！')
             return redirect(url_for('profile.user',username=current_user.username))
-        return render_template('profile/edit_password.html',form=form)
+        return render_template('profile/edit_password.html',
+            form=form)
     else:
         abort(404)
 
@@ -121,7 +125,8 @@ def validate_password_edit_password_questions():
             flash('无法通过密码验证！')
     action = url_for('profile.validate_password_edit_password_questions')
     tips = '需要验证密码才能修改密保。'
-    return render_template('profile/validate_password.html',form=form,action=action,tips=tips)
+    return render_template('profile/validate_password.html',
+        form=form,action=action,tips=tips)
 
 @profile.route('/edit-password-questions', methods=['GET', 'POST'])
 @login_required
@@ -152,7 +157,8 @@ def edit_password_questions():
             form.answer1.data = user['password_questions'][1]
             form.question2.data = user['password_questions'][2]
             form.answer2.data = user['password_questions'][3]
-        return render_template('profile/edit_password_questions.html', form=form)
+        return render_template('profile/edit_password_questions.html',
+            form=form)
     else:
         abort(404)
 
@@ -169,7 +175,8 @@ def validate_password_delete_user():
             flash('无法通过密码验证！')
     action = url_for('profile.validate_password_delete_user')
     tips = '需要验证密码才能删除账户。'
-    return render_template('profile/validate_password.html',form=form,action=action,tips=tips)
+    return render_template('profile/validate_password.html',
+        form=form,action=action,tips=tips)
 
 @profile.route('/delete-user')
 @login_required
@@ -204,7 +211,8 @@ def validate_user():
             return redirect(url_for('.validate_password_questions'))
         else:
             flash('没有这个用户！')
-    return render_template('profile/validate_user.html',form=form)
+    return render_template('profile/validate_user.html',
+        form=form)
 
 @profile.route('/validate-password-questions',methods=['GET','POST'])
 def validate_password_questions():
@@ -234,8 +242,8 @@ def validate_password_questions():
                 flash('无法通过密保问题验证！')
         form.email.data = session.get('forget_email')
         form.username.data = session.get('forget_username')
-        return render_template(
-            'profile/validate_password_questions.html',form=form,question1=question1,question2=question2)
+        return render_template('profile/validate_password_questions.html',
+            form=form,question1=question1,question2=question2)
 
 @profile.route('/set-password',methods=['GET','POST'])
 def set_password():
@@ -259,6 +267,7 @@ def set_password():
             flash('您已设置新密码！！')
             return redirect(url_for('auth.login'))
         action = url_for('profile.set_password')
-        return render_template('profile/edit_password.html',action=action,form=form)
+        return render_template('profile/edit_password.html',
+            action=action,form=form)
     else:
         abort(404)
